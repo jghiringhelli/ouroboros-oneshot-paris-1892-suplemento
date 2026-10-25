@@ -1,0 +1,165 @@
+/* Ouroboros RPG — tema gaslight oscuro */
+.ouroboros, .ouro-chat, .ouroboros-dialog {
+  --o-bg: #17130f; --o-panel: #231c15; --o-panel2: #2e251b; --o-line: #5a4631;
+  --o-gold: #c9a44c; --o-text: #e6dcc8; --o-dim: #a39580; --o-red: #b8342a; --o-green: #5f8a4a;
+}
+
+.ouroboros .window-content { background: var(--o-bg); color: var(--o-text); padding: 0; font-family: "Palatino Linotype", Palatino, serif; }
+.ouroboros .window-content input, .ouroboros .window-content select, .ouroboros .window-content textarea {
+  background: var(--o-panel2); color: var(--o-text); border: 1px solid var(--o-line); border-radius: 3px;
+}
+.ouroboros .window-content button {
+  background: var(--o-panel2); color: var(--o-gold); border: 1px solid var(--o-line); cursor: pointer; line-height: 1.6;
+}
+.ouroboros .window-content button:hover { background: var(--o-line); color: #fff; }
+.ouroboros a { color: var(--o-gold); cursor: pointer; }
+.ouroboros a:hover { color: #fff; text-shadow: none; }
+
+.ouro-sheet { display: flex; flex-direction: column; height: 100%; padding: 8px; gap: 6px; box-sizing: border-box; }
+.ouro-app .ouro-sheet { height: auto; }
+.ouro-scroll { overflow-y: auto; flex: 1; padding-right: 4px; }
+.ouro-gmpanel { height: 100%; }
+
+.ouro-head { display: flex; gap: 10px; align-items: center; border-bottom: 2px solid var(--o-gold); padding-bottom: 6px; }
+.ouro-portrait { width: 72px; height: 72px; object-fit: cover; border: 1px solid var(--o-gold); border-radius: 4px; cursor: pointer; }
+.ouro-portrait.small { width: 44px; height: 44px; }
+.ouro-head-main { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.ouro-name { font-size: 1.6em; font-family: "Palatino Linotype", serif; background: transparent !important; border: none !important; border-bottom: 1px solid var(--o-line) !important; color: var(--o-gold) !important; height: 2em; }
+.ouro-head-row { display: flex; gap: 8px; font-size: .85em; color: var(--o-dim); }
+.ouro-head-row label { display: flex; gap: 4px; align-items: center; }
+.ouro-head-row input[type=number] { width: 44px; }
+.ouro-head-actions { display: flex; flex-direction: column; gap: 4px; }
+
+.ouro-vitals { display: grid; grid-template-columns: 2fr repeat(5, 1fr); gap: 6px; align-items: stretch; }
+.ouro-hp { background: var(--o-panel); border: 1px solid var(--o-line); border-radius: 4px; padding: 4px; }
+.ouro-hp-bar { height: 10px; background: #000; border-radius: 5px; overflow: hidden; }
+.ouro-hp-bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--o-red), #d26a3a); }
+.ouro-hp-nums { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+.ouro-hp-nums input { width: 50px; text-align: center; }
+.ouro-hp-nums button { width: 26px; height: 26px; padding: 0; }
+.ouro-stat { background: var(--o-panel); border: 1px solid var(--o-line); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: .75em; color: var(--o-dim); text-align: center; }
+.ouro-stat strong { font-size: 1.8em; color: var(--o-gold); }
+.ouro-stat input { width: 46px; text-align: center; }
+
+.ouro-tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--o-line); }
+.ouro-tabs a { padding: 4px 14px; color: var(--o-dim); border: 1px solid transparent; border-bottom: none; border-radius: 4px 4px 0 0; }
+.ouro-tabs a.active { background: var(--o-panel); color: var(--o-gold); border-color: var(--o-line); }
+
+.ouro-section { color: var(--o-gold); font-size: 1em; border-bottom: 1px solid var(--o-line); margin: 10px 0 6px; font-family: "Palatino Linotype", serif; letter-spacing: .05em; text-transform: uppercase; }
+.ouro-section .ouro-add { float: right; }
+.ouro-section small { color: var(--o-dim); text-transform: none; }
+
+.ouro-circles { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.ouro-circle { background: var(--o-panel); border: 1px solid var(--o-line); border-radius: 4px; padding: 6px; }
+.ouro-circle h4 { margin: 0 0 4px; color: var(--o-gold); display: flex; gap: 6px; }
+.ouro-circle h4 strong { margin-left: auto; font-size: 1.4em; }
+.ouro-circle .suit { font-size: 1.2em; }
+.ouro-circle.c-water .suit, .ouro-circle.c-air .suit { color: #c6574d; }
+.ouro-circle label { display: flex; justify-content: space-between; align-items: center; padding: 2px 0; }
+.ouro-circle input { width: 48px; text-align: center; }
+
+.ouro-row-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+.ouro-handline, .ouro-empty { color: var(--o-dim); font-style: italic; }
+.ouro-seed { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.ouro-seed input[type=number] { width: 52px; }
+.ouro-check { display: flex; gap: 4px; align-items: center; }
+
+.ouro-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ouro-chip { display: flex; gap: 8px; align-items: center; padding: 4px 10px; width: auto !important; }
+.ouro-chip strong { color: #fff; font-size: 1.2em; }
+
+.ouro-skill { display: grid; grid-template-columns: 28px 1fr 80px 70px 36px 20px; gap: 4px; align-items: center; margin-bottom: 3px; }
+.ouro-skill .ouro-roll { width: 26px; height: 26px; padding: 0; }
+.ouro-skill .ouro-res input { width: 38px; }
+.ouro-total { text-align: center; color: var(--o-gold); }
+
+.ouro-item { display: flex; align-items: center; gap: 8px; padding: 3px 6px; background: var(--o-panel); border: 1px solid var(--o-line); border-radius: 3px; margin-bottom: 3px; }
+.ouro-item img { width: 24px; height: 24px; border: none; }
+.ouro-item .name { flex: 1; }
+.ouro-item .name em { color: var(--o-dim); font-size: .85em; }
+.ouro-item .name small { display: block; color: var(--o-dim); font-size: .8em; }
+.ouro-item a.on { color: var(--o-green); }
+.ouro-item .suit { font-size: 1.4em; }
+
+.ouro-bio label { display: flex; flex-direction: column; gap: 2px; margin-bottom: 6px; color: var(--o-dim); font-size: .85em; }
+.ouro-bio textarea { resize: vertical; }
+.ouro-hpconf { display: flex; gap: 8px; flex-wrap: wrap; }
+.ouro-hpconf label { flex-direction: row; align-items: center; }
+.ouro-hpconf input { width: 60px; }
+
+.ouro-itemform { padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+.ouro-itemform label { display: flex; flex-direction: column; gap: 2px; color: var(--o-dim); font-size: .85em; }
+
+.ouro-inline { display: flex; gap: 8px; align-items: center; }
+.ouro-hand { display: flex; flex-wrap: wrap; gap: 10px; }
+.ouro-handcard { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ouro-deck { background: var(--o-panel); border: 1px solid var(--o-line); border-radius: 4px; padding: 6px; margin-bottom: 6px; display: flex; flex-direction: column; gap: 4px; }
+.ouro-discard { display: flex; flex-wrap: wrap; gap: 3px; }
+.ouro-users { border: 1px solid var(--o-line); margin: 6px 0; display: flex; flex-wrap: wrap; gap: 10px; }
+
+/* Cartas */
+.ouro-card { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; width: 52px; height: 74px; background: #f2ead6; border: 2px solid #3a2e1f; border-radius: 6px; font-family: "Palatino Linotype", serif; box-shadow: 1px 2px 4px #0008; line-height: 1; vertical-align: middle; }
+.ouro-card b { font-size: 1.6em; }
+.ouro-card i { font-style: normal; font-size: 1.7em; }
+.ouro-card.red { color: #b3261e; }
+.ouro-card.black { color: #1c1c1c; }
+.ouro-card.joker { background: linear-gradient(135deg, #f2ead6, #d9c27a); }
+.ouro-card.small { width: 34px; height: 48px; border-width: 1px; }
+.ouro-card.small b { font-size: 1.1em; }
+.ouro-card.small i { font-size: 1.1em; }
+
+/* Chat */
+.ouro-chat { background: #1d1711; color: var(--o-text); border: 1px solid var(--o-line); border-left: 4px solid var(--o-gold); border-radius: 4px; padding: 6px 8px; font-family: "Palatino Linotype", serif; }
+.ouro-chat header { display: flex; justify-content: space-between; align-items: baseline; border-bottom: 1px solid var(--o-line); margin-bottom: 4px; }
+.ouro-chat header h3 { margin: 0; color: var(--o-gold); font-size: 1.05em; border: none; }
+.ouro-chat header span { color: var(--o-dim); font-size: .8em; }
+.ouro-chat .hint { color: var(--o-dim); font-style: italic; margin: 2px 0; }
+.ouro-play { display: flex; align-items: center; gap: 8px; }
+.ouro-playinfo { display: flex; flex-direction: column; gap: 2px; }
+.ouro-playinfo strong { font-size: 1.5em; color: #fff; }
+.ouro-playinfo .tag { font-size: .75em; color: var(--o-dim); }
+.ouro-calc { margin: 4px 0; font-size: 1.05em; }
+.ouro-verdict { padding: 3px 8px; border-radius: 3px; font-weight: bold; text-align: center; margin-top: 4px; }
+.ouro-verdict.ok { background: #28401f; color: #a8e08c; }
+.ouro-verdict.ko { background: #4a1c18; color: #f0a49c; }
+.ouro-buttons { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+.ouro-chat button { background: var(--o-panel2); color: var(--o-gold); border: 1px solid var(--o-line); width: auto; padding: 2px 8px; }
+.ouro-chat button:hover { background: var(--o-line); color: #fff; }
+
+/* Diálogos */
+.ouroboros-dialog .ouro-hand-pick { display: flex; flex-wrap: wrap; gap: 8px; }
+.ouroboros-dialog .ouro-pick { display: flex; align-items: center; gap: 4px; padding: 2px 6px; border: 1px solid var(--o-line); border-radius: 4px; cursor: pointer; }
+.ouroboros-dialog .ouro-pick-text { font-size: .9em; }
+
+/* Enriquecedores en diarios */
+a.ouro-enricher { background: #2e251b; color: #c9a44c; border: 1px solid #5a4631; border-radius: 3px; padding: 0 6px; white-space: nowrap; }
+a.ouro-enricher:hover { background: #5a4631; color: #fff; }
+
+/* Revelado de obras */
+.ouro-mapscroll { overflow: auto; max-height: 62vh; border: 1px solid #3a2e1f; background: #1a1510; }
+.ouro-mapinner { position: relative; width: 100%; line-height: 0; }
+.ouro-mapinner img { width: 100%; height: auto; display: block; user-select: none; }
+.ouro-mapinner.moving { cursor: crosshair; }
+.ouro-marker { position: absolute; transform: translate(-50%, -50%); width: 26px; height: 26px; line-height: 24px; text-align: center; border-radius: 50%; background: #7a1f1f; color: #fff; border: 2px solid #f1e3c4; font: 700 13px sans-serif; cursor: pointer; box-shadow: 0 0 6px #000a; }
+.ouro-marker.hidden { opacity: 0.4; border-style: dashed; }
+.ouro-marker.selected { background: #b8892b; transform: translate(-50%, -50%) scale(1.25); z-index: 2; }
+.ouro-party { position: absolute; transform: translate(-50%, -120%); color: #ffd24a; font-size: 26px; text-shadow: 0 0 4px #000, 0 0 8px #000; pointer-events: none; z-index: 3; }
+.ouro-mapinfo { padding: 6px 4px; min-height: 1.6em; }
+.ouro-maplist { max-height: 160px; overflow: auto; }
+.ouro-art-overlay { position: fixed; left: 3vw; top: 5vh; width: 66vw; height: 90vh; z-index: 90; background: #000; border: 2px solid #3a2e1f; border-radius: 6px; box-shadow: 0 0 40px #000c; display: flex; align-items: center; justify-content: center; }
+.ouro-art-close { position: absolute; top: 4px; right: 6px; z-index: 2; width: 28px; height: 28px; line-height: 1; padding: 0; background: #000a; color: #c9a44c; border: 1px solid #3a2e1f; border-radius: 50%; cursor: pointer; }
+.ouro-art-frame { position: relative; width: 100%; height: 100%; will-change: transform, filter; }
+.ouro-art-frame img, .ouro-art-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.ouro-art-frame video[hidden] { display: none; }
+.ouro-pile { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; }
+.ouro-pile-back { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 74px; border: 2px solid #3a2e1f; border-radius: 6px; background: repeating-linear-gradient(45deg, #5b1f1f, #5b1f1f 6px, #3d1414 6px, #3d1414 12px); color: #f2ead6; font-weight: bold; box-shadow: 1px 2px 4px #0008; }
+.ouro-table { display: grid; grid-template-columns: 1fr; gap: 8px; }
+.ouro-mode { display: flex; flex-direction: column; gap: 4px; border: 2px solid var(--o-line, #3a2e1f); }
+.ouro-modetag { display: inline-block; padding: 0 6px; border-radius: 3px; font-size: 0.8em; font-weight: bold; }
+.ouro-modetag.conscious { background: #2e5b3a; color: #fff; }
+.ouro-modetag.passive { background: #5b1f1f; color: #fff; }
+.ouro-narr { font-style: italic; }
+.ouro-gallerylist .ouro-item { align-items: center; flex-wrap: wrap; gap: 6px; }
+.ouro-gallerylist img { width: 48px; height: 48px; object-fit: cover; border-radius: 3px; }
+.ouro-art-frame img.macabre { opacity: 0; }
+.ouro-art-missing { position: absolute; bottom: 20px; left: 0; right: 0; text-align: center; color: #c9a44c; font-family: monospace; }

@@ -1,0 +1,44 @@
+<section class="ouro-sheet ouro-gmpanel">
+  <div class="ouro-scroll">
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Panel.setup'}}</h3>
+    <div class="ouro-row-buttons">
+      <button type="button" data-action="importAll"><i class="fa-solid fa-file-import"></i> {{localize 'OUROBOROS.Panel.import'}}</button>
+      <button type="button" data-action="macros">{{localize 'OUROBOROS.Panel.macros'}}</button>
+      <button type="button" data-action="ensure">{{localize 'OUROBOROS.Panel.ensure'}}</button>
+      <button type="button" data-action="resetDecks">{{localize 'OUROBOROS.Panel.resetDecks'}}</button>
+    </div>
+
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Panel.table'}}</h3>
+    <div class="ouro-row-buttons">
+      <button type="button" data-action="openTable"><i class="fa-solid fa-table-cells"></i> {{localize 'OUROBOROS.Table.title'}}</button>
+      <button type="button" data-action="openHand"><i class="fa-solid fa-diamond"></i> {{localize 'OUROBOROS.Hand.open'}}</button>
+      <button type="button" data-action="openGallery"><i class="fa-solid fa-panorama"></i> {{localize 'OUROBOROS.Gallery.title'}}</button>
+      <button type="button" data-action="askCheck"><i class="fa-solid fa-paper-plane"></i> {{localize 'OUROBOROS.Request.title'}}</button>
+    </div>
+
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Map.title'}}</h3>
+    <div class="ouro-row-buttons">
+      <button type="button" data-action="openMap"><i class="fa-solid fa-map"></i> {{localize 'OUROBOROS.Map.title'}}</button>
+      <button type="button" data-action="showMap"><i class="fa-solid fa-display"></i> {{localize 'OUROBOROS.Map.showAll'}}</button>
+    </div>
+    {{#each markers}}
+    <div class="ouro-item"><span class="name">{{n}}. {{name}}<small>{{sub}}</small></span>
+      <a data-action="toggleMarker" data-n="{{n}}" title="{{#if revealed}}{{localize 'OUROBOROS.Map.hide'}}{{else}}{{localize 'OUROBOROS.Map.reveal'}}{{/if}}"><i class="fa-solid {{#if revealed}}fa-eye{{else}}fa-eye-slash{{/if}}"></i></a></div>
+    {{/each}}
+
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Panel.encounters'}}</h3>
+    {{#each encounters}}
+    <div class="ouro-item"><span class="name">{{name}}<small>{{summary}}</small></span>
+      <a data-action="spawn" data-id="{{id}}" title="{{localize 'OUROBOROS.Panel.spawn'}}"><i class="fa-solid fa-users"></i></a></div>
+    {{/each}}
+
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Panel.checks'}}</h3>
+    {{#each scenes}}
+    <h4>{{scene}}</h4>
+    {{#each checks}}
+    <div class="ouro-item"><span class="name">{{label}}<small>{{kind}} {{skill}}{{key}} · TN {{tn}}</small></span>
+      <a data-action="request" data-id="{{id}}" title="{{localize 'OUROBOROS.Request.title'}}"><i class="fa-solid fa-paper-plane"></i></a></div>
+    {{/each}}
+    {{/each}}
+  </div>
+</section>

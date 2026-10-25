@@ -1,0 +1,19 @@
+<section class="ouro-sheet ouro-table">
+  <div class="ouro-scroll">
+    {{#each decks}}
+    <h3 class="ouro-section">{{label}}</h3>
+    {{#if exists}}
+    <div class="ouro-pilerow">
+      <div class="ouro-pile ouro-pile-back" title="{{localize 'OUROBOROS.Table.drawPile'}}"><strong>{{left}}</strong><small>{{localize 'OUROBOROS.Table.drawPile'}}</small></div>
+      <div class="ouro-pile" title="{{localize 'OUROBOROS.Table.discardPile'}}"><strong>{{discard}}</strong><small>{{localize 'OUROBOROS.Table.discardPile'}}</small></div>
+    </div>
+    <p class="hint">{{localize 'OUROBOROS.Table.discardOrder'}}</p>
+    <div class="ouro-discard">
+      {{#each cards}}{{{html}}}{{else}}<span class="ouro-empty">{{localize 'OUROBOROS.Table.discardEmpty'}}</span>{{/each}}
+    </div>
+    {{else}}
+    <p class="ouro-empty">{{localize 'OUROBOROS.Deck.missing'}}</p>
+    {{/if}}
+    {{/each}}
+  </div>
+</section>

@@ -1,0 +1,184 @@
+<section class="ouro-sheet {{actor.type}}">
+  <header class="ouro-head">
+    <img class="ouro-portrait" src="{{actor.img}}" data-edit="img" data-action="editImage" alt="{{actor.name}}">
+    <div class="ouro-head-main">
+      <input class="ouro-name" type="text" name="name" value="{{actor.name}}" placeholder="{{localize 'OUROBOROS.Name'}}">
+      <div class="ouro-head-row">
+        <label>{{localize 'OUROBOROS.Role'}} <input type="text" name="system.details.role" value="{{system.details.role}}"></label>
+        <label>{{localize 'OUROBOROS.Job.title'}}
+          <select name="system.job.suit">
+            {{#each jobSuits}}<option value="{{this.[0]}}" {{#if (eq this.[0] ../system.job.suit)}}selected{{/if}}>{{this.[1]}}</option>{{/each}}
+          </select>
+        </label>
+        <label>{{localize 'OUROBOROS.Job.level'}} <input type="number" name="system.job.level" value="{{system.job.level}}" min="0" max="4"></label>
+      </div>
+    </div>
+    <div class="ouro-head-actions">
+      <button type="button" data-action="rollInit" title="{{localize 'OUROBOROS.Initiative'}}"><i class="fa-solid fa-bolt"></i></button>
+      <button type="button" data-action="openHand" title="{{localize 'OUROBOROS.Hand.open'}}"><i class="fa-solid fa-diamond"></i></button>
+    </div>
+  </header>
+
+  <div class="ouro-vitals">
+    <div class="ouro-hp">
+      <div class="ouro-hp-bar"><span style="width: {{hpPct}}%"></span></div>
+      <div class="ouro-hp-nums">
+        <button type="button" data-action="hpMod" data-delta="-1">−</button>
+        <label>{{localize 'OUROBOROS.HP'}}
+          <input type="number" name="system.hp.value" value="{{system.hp.value}}" min="0"> / <strong>{{system.hp.max}}</strong>
+        </label>
+        <button type="button" data-action="hpMod" data-delta="1">+</button>
+      </div>
+    </div>
+    <div class="ouro-stat"><span>{{localize 'OUROBOROS.Willpower'}}</span><strong>{{system.willpower}}</strong></div>
+    <div class="ouro-stat"><span>{{localize 'OUROBOROS.HandSize'}}</span><strong>{{system.handSize}}</strong></div>
+    <div class="ouro-stat"><span>{{localize 'OUROBOROS.PassiveDef'}}</span><strong>{{system.passiveDefense}}</strong></div>
+    <div class="ouro-stat"><span>{{localize 'OUROBOROS.Combat.skill'}}</span>
+      <input type="number" name="system.combat.skill" value="{{system.combat.skill}}"></div>
+    <div class="ouro-stat"><span>{{localize 'OUROBOROS.Marks'}}</span>
+      <input type="number" name="system.marks" value="{{system.marks}}" min="0"></div>
+  </div>
+
+  <nav class="ouro-tabs">
+    <a class="{{#if tabs.main}}active{{/if}}" data-action="setTab" data-tab="main">{{localize 'OUROBOROS.Tabs.main'}}</a>
+    <a class="{{#if tabs.skills}}active{{/if}}" data-action="setTab" data-tab="skills">{{localize 'OUROBOROS.Tabs.skills'}}</a>
+    <a class="{{#if tabs.gear}}active{{/if}}" data-action="setTab" data-tab="gear">{{localize 'OUROBOROS.Tabs.gear'}}</a>
+    <a class="{{#if tabs.bio}}active{{/if}}" data-action="setTab" data-tab="bio">{{localize 'OUROBOROS.Tabs.bio'}}</a>
+  </nav>
+
+  <div class="ouro-scroll">
+    {{#if tabs.main}}
+    <div class="ouro-circles">
+      {{#each circles}}
+      <div class="ouro-circle c-{{key}}">
+        <h4><span class="suit">{{suit}}</span> {{label}} <strong>{{value}}</strong></h4>
+        {{#each attrs}}
+        <label>{{label}} <input type="number" name="system.attributes.{{key}}" value="{{value}}" min="1" max="12"></label>
+        {{/each}}
+      </div>
+      {{/each}}
+    </div>
+
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Combat.title'}}</h3>
+    <div class="ouro-row-buttons">
+      <button type="button" data-action="rollAttack"><i class="fa-solid fa-hand-fist"></i> {{localize 'OUROBOROS.Roll.attack'}}</button>
+      <button type="button" data-action="drawCard"><i class="fa-solid fa-plus"></i> {{localize 'OUROBOROS.Hand.draw'}}</button>
+      {{#unless hasHand}}<button type="button" data-action="createHand">{{localize 'OUROBOROS.Hand.create'}}</button>{{/unless}}
+    </div>
+    {{#if hasHand}}
+    <div class="ouro-handline">{{localize 'OUROBOROS.Hand.title'}}: {{handCount}} / {{system.handSize}}</div>
+    {{/if}}
+
+    {{#if isCharacter}}
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Seed.title'}}</h3>
+    <div class="ouro-seed">
+      <label class="ouro-check"><input type="checkbox" name="system.seed.active" {{#if system.seed.active}}checked{{/if}}> {{localize 'OUROBOROS.Seed.active'}}</label>
+      <label>{{localize 'OUROBOROS.Seed.hours'}} <input type="number" name="system.seed.hours" value="{{system.seed.hours}}" min="0"></label>
+      <label>{{localize 'OUROBOROS.Seed.failures'}} <input type="number" name="system.seed.failures" value="{{system.seed.failures}}" min="0"></label>
+      <button type="button" data-action="plantSeed">{{localize 'OUROBOROS.Seed.plant'}}</button>
+      <button type="button" data-action="createWork">{{localize 'OUROBOROS.Seed.create'}}</button>
+    </div>
+    {{/if}}
+    {{/if}}
+
+    {{#if tabs.skills}}
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Ability.title'}}</h3>
+    <div class="ouro-chips">
+      {{#each abilities}}
+      <button type="button" class="ouro-chip" data-action="rollAbility" data-key="{{key}}"><span>{{label}}</span><strong>{{value}}</strong></button>
+      {{/each}}
+    </div>
+
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Save.title'}}</h3>
+    <div class="ouro-chips">
+      {{#each saves}}
+      <button type="button" class="ouro-chip" data-action="rollSave" data-key="{{key}}"><span>{{label}}</span><strong>{{value}}</strong></button>
+      {{/each}}
+    </div>
+
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Skill.title'}}
+      <a class="ouro-add" data-action="addSkill" title="{{localize 'OUROBOROS.Add'}}"><i class="fa-solid fa-plus"></i></a></h3>
+    <div class="ouro-skills">
+      {{#each skills}}
+      <div class="ouro-skill" data-index="{{index}}">
+        <button type="button" class="ouro-roll" data-action="rollSkill" data-index="{{index}}" title="{{localize 'OUROBOROS.Roll.check'}}"><i class="fa-solid fa-diamond"></i></button>
+        <input class="skill-edit" data-field="name" type="text" value="{{name}}">
+        <select class="skill-edit" data-field="circle">
+          {{#each ../circleChoices}}<option value="{{key}}" {{#if (eq key ../circle)}}selected{{/if}}>{{label}}</option>{{/each}}
+        </select>
+        <span class="ouro-res">−<input class="skill-edit" data-field="res" data-type="number" type="number" min="0" max="10" value="{{res}}"></span>
+        <strong class="ouro-total" title="{{localize 'OUROBOROS.Skill.total'}}">{{total}}</strong>
+        <a data-action="delSkill" data-index="{{index}}"><i class="fa-solid fa-trash"></i></a>
+      </div>
+      {{/each}}
+    </div>
+    {{/if}}
+
+    {{#if tabs.gear}}
+    <h3 class="ouro-section">{{localize 'TYPES.Item.weapon'}}
+      <a class="ouro-add" data-action="createItem" data-type="weapon"><i class="fa-solid fa-plus"></i></a></h3>
+    {{#each weapons}}
+    <div class="ouro-item">
+      <img src="{{img}}" alt="">
+      <span class="name">{{name}} <em>+{{system.bonus}}{{#if system.ranged}} · {{localize 'OUROBOROS.Item.ranged'}}{{/if}}</em></span>
+      <a data-action="rollAttack" data-id="{{id}}" title="{{localize 'OUROBOROS.Roll.attack'}}"><i class="fa-solid fa-hand-fist"></i></a>
+      <a data-action="toggleEquip" data-id="{{id}}" class="{{#if system.equipped}}on{{/if}}" title="{{localize 'OUROBOROS.Item.equipped'}}"><i class="fa-solid fa-shield-halved"></i></a>
+      <a data-action="editItem" data-id="{{id}}"><i class="fa-solid fa-pen"></i></a>
+      <a data-action="deleteItem" data-id="{{id}}"><i class="fa-solid fa-trash"></i></a>
+    </div>
+    {{/each}}
+
+    <h3 class="ouro-section">{{localize 'TYPES.Item.armor'}} <small>({{localize 'OUROBOROS.Combat.armor'}}: {{system.armorTotal}})</small>
+      <a class="ouro-add" data-action="createItem" data-type="armor"><i class="fa-solid fa-plus"></i></a></h3>
+    {{#each armors}}
+    <div class="ouro-item">
+      <img src="{{img}}" alt="">
+      <span class="name">{{name}} <em>+{{system.defense}}</em></span>
+      <a data-action="toggleEquip" data-id="{{id}}" class="{{#if system.equipped}}on{{/if}}" title="{{localize 'OUROBOROS.Item.equipped'}}"><i class="fa-solid fa-shield-halved"></i></a>
+      <a data-action="editItem" data-id="{{id}}"><i class="fa-solid fa-pen"></i></a>
+      <a data-action="deleteItem" data-id="{{id}}"><i class="fa-solid fa-trash"></i></a>
+    </div>
+    {{/each}}
+
+    <h3 class="ouro-section">{{localize 'TYPES.Item.power'}}
+      <a class="ouro-add" data-action="createItem" data-type="power"><i class="fa-solid fa-plus"></i></a></h3>
+    {{#each powers}}
+    <div class="ouro-item power">
+      <span class="suit">{{suit}}</span>
+      <span class="name">{{name}} <em>{{parity}} · {{localize 'OUROBOROS.Power.level'}} {{level}}</em><small>{{text}}</small></span>
+      <a data-action="usePower" data-id="{{id}}" title="{{localize 'OUROBOROS.Power.use'}}"><i class="fa-solid fa-wand-sparkles"></i></a>
+      <a data-action="editItem" data-id="{{id}}"><i class="fa-solid fa-pen"></i></a>
+      <a data-action="deleteItem" data-id="{{id}}"><i class="fa-solid fa-trash"></i></a>
+    </div>
+    {{/each}}
+
+    <h3 class="ouro-section">{{localize 'TYPES.Item.gear'}}
+      <a class="ouro-add" data-action="createItem" data-type="gear"><i class="fa-solid fa-plus"></i></a></h3>
+    {{#each gear}}
+    <div class="ouro-item">
+      <img src="{{img}}" alt="">
+      <span class="name">{{name}}{{#if system.quantity}} <em>×{{system.quantity}}</em>{{/if}}<small>{{system.text}}</small></span>
+      <a data-action="editItem" data-id="{{id}}"><i class="fa-solid fa-pen"></i></a>
+      <a data-action="deleteItem" data-id="{{id}}"><i class="fa-solid fa-trash"></i></a>
+    </div>
+    {{/each}}
+    {{/if}}
+
+    {{#if tabs.bio}}
+    <div class="ouro-bio">
+      {{#unless isCharacter}}
+      <label>{{localize 'OUROBOROS.Details.powers'}}<textarea name="system.details.powers" rows="4">{{system.details.powers}}</textarea></label>
+      {{/unless}}
+      <label>{{localize 'OUROBOROS.Details.hook'}}<textarea name="system.details.hook" rows="3">{{system.details.hook}}</textarea></label>
+      <label>{{localize 'OUROBOROS.Details.weakness'}}<textarea name="system.details.weakness" rows="2">{{system.details.weakness}}</textarea></label>
+      <label>{{localize 'OUROBOROS.Details.biography'}}<textarea name="system.details.biography" rows="5">{{system.details.biography}}</textarea></label>
+      <label>{{localize 'OUROBOROS.Details.notes'}}<textarea name="system.details.notes" rows="4">{{system.details.notes}}</textarea></label>
+      <div class="ouro-hpconf">
+        <label>{{localize 'OUROBOROS.HPOverride'}} <input type="number" name="system.hp.override" value="{{system.hp.override}}" min="0"></label>
+        <label>{{localize 'OUROBOROS.HPBonus'}} <input type="number" name="system.hp.bonus" value="{{system.hp.bonus}}"></label>
+        <label>{{localize 'OUROBOROS.Combat.passiveBonus'}} <input type="number" name="system.combat.passiveBonus" value="{{system.combat.passiveBonus}}"></label>
+      </div>
+    </div>
+    {{/if}}
+  </div>
+</section>

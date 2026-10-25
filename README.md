@@ -19,6 +19,21 @@ Cada pintura existe en dos versiones: la **original** (simbolismo de 1890, óleo
 | 07 | El Kraken |
 | 08 | Las Musas |
 | 09 | Cartel Rosacruz |
+| 10 | Estatua de Bathsheba |
+
+## Contenido del repositorio
+
+| Carpeta | Qué hay |
+|---|---|
+| `original/`, `macabra/`, `video/` | Las pinturas y sus contrapartes macabras (**spoilers** en `macabra/` y `video/`). |
+| `galeria/galeria_original.mp4` | Vídeo tipo galería: ~5 s por cada pintura original. |
+| `transformacion/` | Bathsheba pasa de estatua de mármol a mujer (vídeo y fotograma final). **Spoiler.** |
+| `extras/` | Retratos con placa (PJ y PNJ) y 4 carteles estilo Lautrec. |
+| `mapa/` | Plano Hachette de París (1892, dominio público) limpio y con los 7 marcadores, más `marcadores.json`. |
+| `hojas_pj/` | Hojas de personaje en PDF de los 5 pregenerados (Edwina, Jane, Clovis, Donatien, René). |
+| `hojas_pnj_GM/` | Fichas de GM de PNJ y criaturas en PDF. **Spoilers.** |
+| `reglas/` | Suplemento de reglas Ouroboros para el one-shot (reglas nuevas, criaturas, salidas del clímax, época 1892, **spoilers**) y el Quickstart de Ouroboros. |
+| `foundry/` | Código fuente del sistema Foundry VTT v13 `ouroboros` (sin imágenes ni resumen de la aventura). Ver `foundry/README.md`. |
 
 Rutas: `original/<id>.png`, `macabra/<id>.png`, `video/<id>.mp4`, con el id completo (por ejemplo `01_bathsheba`).
 

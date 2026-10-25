@@ -1,0 +1,46 @@
+<section class="ouro-sheet item-{{type}}">
+  <header class="ouro-head">
+    <img class="ouro-portrait small" src="{{item.img}}" data-edit="img" data-action="editImage" alt="{{item.name}}">
+    <input class="ouro-name" type="text" name="name" value="{{item.name}}">
+  </header>
+  <div class="ouro-itemform">
+    {{#if (eq type "weapon")}}
+    <label>{{localize 'OUROBOROS.Item.category'}}
+      <select name="system.category">
+        <option value="light" {{#if (eq system.category "light")}}selected{{/if}}>{{localize 'OUROBOROS.Item.light'}} (+1)</option>
+        <option value="medium" {{#if (eq system.category "medium")}}selected{{/if}}>{{localize 'OUROBOROS.Item.medium'}} (+2)</option>
+        <option value="heavy" {{#if (eq system.category "heavy")}}selected{{/if}}>{{localize 'OUROBOROS.Item.heavy'}} (+3)</option>
+      </select></label>
+    <label>{{localize 'OUROBOROS.Item.attackBonus'}} <input type="number" name="system.bonus" value="{{system.bonus}}"></label>
+    <label>{{localize 'OUROBOROS.Item.damageBonus'}} <input type="number" name="system.damageBonus" value="{{system.damageBonus}}"></label>
+    <label>{{localize 'OUROBOROS.Roll.attribute'}}
+      <select name="system.attribute">{{#each attrChoices}}<option value="{{key}}" {{#if (eq key ../system.attribute)}}selected{{/if}}>{{label}}</option>{{/each}}</select></label>
+    <label class="ouro-check"><input type="checkbox" name="system.ranged" {{#if system.ranged}}checked{{/if}}> {{localize 'OUROBOROS.Item.ranged'}}</label>
+    <label class="ouro-check"><input type="checkbox" name="system.equipped" {{#if system.equipped}}checked{{/if}}> {{localize 'OUROBOROS.Item.equipped'}}</label>
+    <label>{{localize 'OUROBOROS.Item.notes'}}<textarea name="system.notes" rows="3">{{system.notes}}</textarea></label>
+    {{/if}}
+
+    {{#if (eq type "armor")}}
+    <label>{{localize 'OUROBOROS.Item.defense'}} <input type="number" name="system.defense" value="{{system.defense}}" min="0"></label>
+    <label class="ouro-check"><input type="checkbox" name="system.equipped" {{#if system.equipped}}checked{{/if}}> {{localize 'OUROBOROS.Item.equipped'}}</label>
+    <label>{{localize 'OUROBOROS.Item.notes'}}<textarea name="system.notes" rows="3">{{system.notes}}</textarea></label>
+    {{/if}}
+
+    {{#if (eq type "power")}}
+    <label>{{localize 'OUROBOROS.Power.suit'}}
+      <select name="system.suit">{{#each suitChoices}}<option value="{{key}}" {{#if (eq key ../system.suit)}}selected{{/if}}>{{label}}</option>{{/each}}</select></label>
+    <label>{{localize 'OUROBOROS.Power.parity'}}
+      <select name="system.parity">
+        <option value="even" {{#if (eq system.parity "even")}}selected{{/if}}>{{localize 'OUROBOROS.Power.even'}}</option>
+        <option value="odd" {{#if (eq system.parity "odd")}}selected{{/if}}>{{localize 'OUROBOROS.Power.odd'}}</option>
+      </select></label>
+    <label>{{localize 'OUROBOROS.Power.level'}} <input type="number" name="system.level" value="{{system.level}}" min="1" max="4"></label>
+    <label>{{localize 'OUROBOROS.Power.text'}}<textarea name="system.text" rows="5">{{system.text}}</textarea></label>
+    {{/if}}
+
+    {{#if (eq type "gear")}}
+    <label>{{localize 'OUROBOROS.Item.quantity'}} <input type="number" name="system.quantity" value="{{system.quantity}}" min="0"></label>
+    <label>{{localize 'OUROBOROS.Item.notes'}}<textarea name="system.text" rows="5">{{system.text}}</textarea></label>
+    {{/if}}
+  </div>
+</section>

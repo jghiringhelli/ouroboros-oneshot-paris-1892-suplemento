@@ -1,0 +1,12 @@
+[
+  { "id": "pinot_musas", "name": "1. Muerte de Pinot y enjambre de Musas", "summary": "Escena 4: lavabo/pasillo de la galería. Enjambres de Musas.",
+    "tokens": [ { "actor": "musas", "count": 3 }, { "actor": "pinot", "count": 1 } ] },
+  { "id": "bathsheba_galeria", "name": "2. Bathsheba en la galería", "summary": "Galería Durand-Ruel. Bathsheba y Péladan.",
+    "tokens": [ { "actor": "bathsheba", "count": 1 }, { "actor": "peladan", "count": 1 } ] },
+  { "id": "manifestacion_clovis", "name": "3. Manifestación de Clovis", "summary": "Acto 2: la obra de Clovis cobra vida.",
+    "tokens": [ { "actor": "manifestacion", "count": 1 }, { "actor": "musas", "count": 1 } ] },
+  { "id": "thoiry", "name": "4. Minotauro y kraken en Thoiry", "summary": "Taller y muelle del lago.",
+    "tokens": [ { "actor": "minotauro", "count": 1 }, { "actor": "kraken", "count": 1 } ] },
+  { "id": "final_bathsheba", "name": "5. Final con Bathsheba", "summary": "La Rush y Bathsheba en la cabaña.",
+    "tokens": [ { "actor": "bathsheba", "count": 1 }, { "actor": "larush", "count": 1 }, { "actor": "musas", "count": 2 } ] }
+]

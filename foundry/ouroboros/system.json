@@ -1,0 +1,34 @@
+{
+  "id": "ouroboros",
+  "title": "Ouroboros RPG",
+  "description": "Sistema de rol de cartas (sin dados) sobre almas y reencarnación. Incluye mazos y manos con Cards nativas, tiradas por cartas, pregenerados y el one-shot «Un Mensaje de Arte» con revelado de obras en pantalla.",
+  "version": "0.1.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13"
+  },
+  "authors": [
+    { "name": "Ouroboros RPG" }
+  ],
+  "esmodules": ["module/ouroboros.mjs"],
+  "styles": ["css/ouroboros.css"],
+  "languages": [
+    { "lang": "es", "name": "Español", "path": "lang/es.json" }
+  ],
+  "socket": true,
+  "documentTypes": {
+    "Actor": {
+      "character": {},
+      "npc": {},
+      "creature": {}
+    },
+    "Item": {
+      "weapon": {},
+      "armor": {},
+      "power": {},
+      "gear": {}
+    }
+  },
+  "primaryTokenAttribute": "hp",
+  "grid": { "distance": 1.5, "units": "m" }
+}

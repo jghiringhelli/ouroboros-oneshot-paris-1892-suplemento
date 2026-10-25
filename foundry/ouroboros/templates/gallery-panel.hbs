@@ -1,0 +1,33 @@
+<section class="ouro-sheet ouro-gmpanel ouro-gallerylist">
+  <div class="ouro-scroll">
+    <fieldset class="ouro-users"><legend>{{localize 'OUROBOROS.Art.users'}}</legend>
+      {{#each users}}<label class="ouro-check"><input type="checkbox" name="users" value="{{id}}" {{#if checked}}checked{{/if}}> {{name}}{{#unless active}} ·off{{/unless}}</label>{{/each}}
+    </fieldset>
+    <div class="ouro-row-buttons">
+      <button type="button" data-action="transform"><i class="fa-solid fa-skull"></i> {{localize 'OUROBOROS.Gallery.transform'}}</button>
+      <button type="button" data-action="hide"><i class="fa-solid fa-eye-slash"></i> {{localize 'OUROBOROS.Art.hide'}}</button>
+      <button type="button" data-action="resetAll"><i class="fa-solid fa-rotate-left"></i> {{localize 'OUROBOROS.Gallery.resetAll'}}</button>
+    </div>
+    {{#each paintings}}
+    <div class="ouro-item">
+      <img src="{{thumb}}" alt="">
+      <span class="name">{{name}}<small>{{#if played}}{{localize 'OUROBOROS.Gallery.playedBy'}}: {{played}}{{else}}{{localize 'OUROBOROS.Gallery.pending'}}{{/if}}</small></span>
+      <select data-field="mode" data-id="{{id}}" title="{{localize 'OUROBOROS.Check.mode'}}">{{#each modes}}<option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      <select data-field="tn" data-id="{{id}}" title="{{localize 'OUROBOROS.Gallery.tn'}}">{{#each tns}}<option value="{{key}}" {{#if selected}}selected{{/if}}>{{label}}</option>{{/each}}</select>
+      <a data-action="show" data-id="{{id}}" title="{{localize 'OUROBOROS.Art.show'}}"><i class="fa-solid fa-eye"></i></a>
+      <a data-action="fire" data-id="{{id}}" title="{{localize 'OUROBOROS.Gallery.fire'}}"><i class="fa-solid fa-play"></i></a>
+      <a data-action="reset" data-id="{{id}}" title="{{localize 'OUROBOROS.Gallery.reset'}}"><i class="fa-solid fa-rotate-left"></i></a>
+    </div>
+    {{/each}}
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Gallery.portraits'}}</h3>
+    {{#each portraits}}
+    <div class="ouro-item"><img src="{{thumb}}" alt=""><span class="name">{{name}}</span>
+      <a data-action="image" data-id="{{id}}" title="{{localize 'OUROBOROS.Art.show'}}"><i class="fa-solid fa-eye"></i></a></div>
+    {{/each}}
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Gallery.posters'}}</h3>
+    {{#each posters}}
+    <div class="ouro-item"><img src="{{thumb}}" alt=""><span class="name">{{name}}</span>
+      <a data-action="image" data-id="{{id}}" title="{{localize 'OUROBOROS.Art.show'}}"><i class="fa-solid fa-eye"></i></a></div>
+    {{/each}}
+  </div>
+</section>

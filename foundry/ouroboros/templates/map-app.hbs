@@ -1,0 +1,32 @@
+<section class="ouro-sheet ouro-map">
+  {{#if isGM}}
+  <div class="ouro-row-buttons">
+    <button type="button" data-action="moveToggle" class="{{#if moveMode}}active{{/if}}"><i class="fa-solid fa-location-dot"></i> {{localize 'OUROBOROS.Map.moveParty'}}{{#if moveMode}} ✓{{/if}}</button>
+    <button type="button" data-action="showAll"><i class="fa-solid fa-display"></i> {{localize 'OUROBOROS.Map.showAll'}}</button>
+  </div>
+  {{/if}}
+  <div class="ouro-mapscroll">
+    <div class="ouro-mapinner {{#if moveMode}}moving{{/if}}">
+      <img src="{{image}}" alt="" draggable="false">
+      {{#each markers}}
+      <a class="ouro-marker {{#unless revealed}}hidden{{/unless}} {{#if selected}}selected{{/if}}" style="left:{{left}}%;top:{{top}}%" data-action="pick" data-n="{{n}}" title="{{name}} — {{sub}}">{{n}}</a>
+      {{/each}}
+      {{#if party}}<span class="ouro-party" style="left:{{party.left}}%;top:{{party.top}}%" title="{{localize 'OUROBOROS.Map.party'}}"><i class="fa-solid fa-star"></i></span>{{/if}}
+    </div>
+  </div>
+  <div class="ouro-mapinfo">
+    {{#if info}}<strong>{{info.n}}. {{info.name}}</strong> — {{info.sub}}{{#if isGM}}{{#if info.linkName}} · <em>{{info.linkName}}</em>{{/if}}{{/if}}
+    {{else}}<span class="hint">{{localize 'OUROBOROS.Map.hint'}}</span>{{/if}}
+  </div>
+  {{#if isGM}}
+  <div class="ouro-maplist">
+    {{#each markers}}
+    <div class="ouro-item">
+      <span class="name">{{n}}. {{name}}<small>{{sub}}</small></span>
+      <select data-link="{{n}}" title="{{localize 'OUROBOROS.Map.link'}}">{{#each arts}}<option value="{{id}}" {{#if selected}}selected{{/if}}>{{name}}</option>{{/each}}</select>
+      <a data-action="reveal" data-n="{{n}}" title="{{#if revealed}}{{localize 'OUROBOROS.Map.hide'}}{{else}}{{localize 'OUROBOROS.Map.reveal'}}{{/if}}"><i class="fa-solid {{#if revealed}}fa-eye{{else}}fa-eye-slash{{/if}}"></i></a>
+    </div>
+    {{/each}}
+  </div>
+  {{/if}}
+</section>

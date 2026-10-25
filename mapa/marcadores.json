@@ -1,0 +1,51 @@
+[
+ {
+  "n": "1",
+  "name": "Casa de absenta",
+  "sub": "Belleville",
+  "x": 0.7857,
+  "y": 0.3693
+ },
+ {
+  "n": "2",
+  "name": "Galería Durand-Ruel",
+  "sub": "Rue Le Peletier",
+  "x": 0.4873,
+  "y": 0.382
+ },
+ {
+  "n": "3",
+  "name": "Residencia de Péladan",
+  "sub": "Centro de París",
+  "x": 0.5059,
+  "y": 0.3992
+ },
+ {
+  "n": "4",
+  "name": "Prefectura de Policía",
+  "sub": "Île de la Cité",
+  "x": 0.5492,
+  "y": 0.5405
+ },
+ {
+  "n": "5",
+  "name": "La Morgue",
+  "sub": "Detrás de Notre-Dame",
+  "x": 0.5884,
+  "y": 0.57
+ },
+ {
+  "n": "6",
+  "name": "Gare Montparnasse",
+  "sub": "Tren a Thoiry",
+  "x": 0.4207,
+  "y": 0.673
+ },
+ {
+  "n": "7",
+  "name": "Thoiry (fuera del plano)",
+  "sub": "Cabaña del lago",
+  "x": 0.1786,
+  "y": 0.8849
+ }
+]

@@ -5,8 +5,10 @@
   "version": "0.1.0",
   "compatibility": {
     "minimum": "13",
-    "verified": "13"
+    "verified": "14"
   },
+  "manifest": "https://raw.githubusercontent.com/jghiringhelli/ouroboros-oneshot-paris-1892-suplemento/main/foundry/ouroboros/system.json",
+  "download": "https://github.com/jghiringhelli/ouroboros-oneshot-paris-1892-suplemento/releases/latest/download/ouroboros-system.zip",
   "authors": [
     { "name": "Ouroboros RPG" }
   ],

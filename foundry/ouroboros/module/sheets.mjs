@@ -1,6 +1,6 @@
 import { CIRCLES, SUITS } from "./logic.mjs";
 import * as Rolls from "./rolls.mjs";
-import { getHand, cardInfo, ensureHand, fillHand, discardHand, playFromHand, logTable } from "./cards.mjs";
+import { handSizeOfActor, getHand, cardInfo, ensureHand, fillHand, discardHand, playFromHand, logTable } from "./cards.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2, ItemSheetV2 } = foundry.applications.sheets;
@@ -80,6 +80,7 @@ export class OuroborosActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     const hand = getHand(doc);
     ctx.hasHand = !!hand;
     ctx.isGM = game.user.isGM;
+    ctx.handSize = handSizeOfActor(doc);
     ctx.handCards = hand ? hand.cards.contents.map(c => { const i = cardInfo(c); return { id: i.id, html: Rolls.cardHtml(i, { small: true }) }; }) : [];
     ctx.handCount = ctx.handCards.length;
     return ctx;

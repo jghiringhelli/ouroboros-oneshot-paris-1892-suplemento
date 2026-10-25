@@ -270,7 +270,9 @@
       "panel": "Panel del GM",
       "panelHint": "Importación, mazos, galería, combates y chequeos.",
       "import": "Importar aventura",
-      "importHint": "Crea (sin duplicar) personajes, PNJ, objetos, diarios y macros de «Un Mensaje de Arte»."
+      "importHint": "Crea (sin duplicar) personajes, PNJ, objetos, diarios y macros de «Un Mensaje de Arte».",
+      "includeDemo": "Importar también los pregenerados de demo",
+      "includeDemoHint": "Viktor, Elena, Dmitri y Magnus. El one-shot solo usa Edwina, Jane, Clovis, Donatien y Rochefort. Afecta a la próxima importación."
     },
     "Status": {
       "stunned": "Aturdido",
@@ -338,7 +340,11 @@
       "logDiscardCard": "descarta de la mano:",
       "discardpile": "Descarte",
       "discardorder": "Descarte en orden: la última carta descartada va primero.",
-      "discardempty": "Descarte vacío."
+      "discardempty": "Descarte vacío.",
+      "drawTop": "Robar carta del tope",
+      "drawTo": "Robar a la mano de…",
+      "pickHand": "Elige una mano a la que robar.",
+      "handToDiscard": "Mano → descarte"
     },
     "Use": {
       "title": "Uso de la carta",
@@ -380,6 +386,24 @@
       "link": "Obra de la Galería (opcional)",
       "hide": "Ocultar lugar",
       "reveal": "Revelar lugar"
+    },
+    "Scene": {
+      "title": "Escena: quién juega",
+      "hint": "Solo los actores activos tienen mano y reciben cartas. Al activar se reparte su mano; al desactivar va al descarte. El número es el tamaño de mano (vacío = valor por defecto).",
+      "pcs": "Jugadores (mazo de jugadores)",
+      "npcs": "PNJ y criaturas (mazo del GM)",
+      "demo": "demo",
+      "user": "Jugador de Foundry propietario",
+      "noUser": "sin jugador",
+      "size": "Tamaño de mano",
+      "willpowerDefault": "por defecto: Voluntad",
+      "default": "por defecto",
+      "adjust": "Rellenar/ajustar a N",
+      "noActors": "Ninguno.",
+      "removeDemo": "Quitar pregenerados de demo",
+      "removeDemoAsk": "Se borrarán Viktor, Elena, Dmitri y Magnus con sus manos. ¿Continuar?",
+      "removedDemo": "Pregenerados de demo eliminados",
+      "noDemo": "No hay pregenerados de demo en el mundo."
     }
   }
 }

@@ -21,6 +21,12 @@
 .ouro-app .ouro-sheet { height: auto; flex: 1 1 auto; min-height: 0; }
 .ouro-scroll { overflow-y: auto; flex: 1 1 auto; min-height: 0; padding-right: 4px; }
 .ouro-gallerylist .ouro-scroll { scrollbar-gutter: stable; }
+.ouro-scenerow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 2px 4px; border-bottom: 1px solid var(--o-line); }
+.ouro-scenerow .ouro-check { flex: 1 1 150px; }
+.ouro-scenerow input[type=number] { width: 52px; }
+.ouro-scenecfg summary { cursor: pointer; }
+.ouro-scenecfg summary h3 { display: inline-block; }
+.ouro-drawto { display: flex; gap: 6px; align-items: center; margin: 4px 0; }
 .ouro-dir-buttons { display: flex; gap: 4px; padding: 4px 8px; flex-wrap: wrap; }
 .ouro-dir-buttons button { flex: 1 1 auto; }
 .ouro-handrow { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 2px 0 6px; }

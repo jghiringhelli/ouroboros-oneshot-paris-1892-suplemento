@@ -1,6 +1,8 @@
 import {
   getHand, cardInfo, deckSummary, ensureDecksAndHands, ensureHand, shuffleDeck, shuffleDiscardBack, resetDecks, fillHand, discardHand,
-  drawToHand, deckTypeFor, peekDeck, reorderDeck, topToBottomDeck, handToDeck, searchDeck, takeCard, logTable, topCard, playFromHand, dealEmptyHands
+  drawToHand, deckTypeFor, peekDeck, reorderDeck, topToBottomDeck, handToDeck, searchDeck, takeCard, logTable, topCard, playFromHand, dealEmptyHands,
+  isActiveActor, handSizeOfActor, sceneSizeOverride, setActorActive, setActorSize, ownerUserOf, assignActorUser, removeDemoActors, adjustHand, isDemo
+
 } from "./cards.mjs";
 import { cardHtml, playWithUse, useTopCard } from "./rolls.mjs";
 import { loadMarkers, toggleMarker, showMapTo, openMap } from "./map.mjs";
@@ -13,7 +15,19 @@ const esc = s => foundry.utils.escapeHTML(String(s ?? ""));
 const T = "systems/ouroboros/templates";
 const NS = "ouroboros";
 const GM_ACTOR = () => ({ name: "GM" });
-const hasHandFlag = a => !!(getHand(a) || a.getFlag(NS, "hand"));
+const hasHandFlag = a => isActiveActor(a);
+
+async function removeDemoDialog() {
+  const n = game.actors.filter(isDemo).length;
+  if (!n) return ui.notifications.info(L("OUROBOROS.Scene.noDemo"));
+  const ok = await DialogV2.confirm({
+    window: { title: L("OUROBOROS.Scene.removeDemo") }, rejectClose: false,
+    content: `<p>${L("OUROBOROS.Scene.removeDemoAsk")} (${n})</p>`
+  });
+  if (!ok) return;
+  const done = await removeDemoActors();
+  ui.notifications.info(`${L("OUROBOROS.Scene.removedDemo")}: ${done}`);
+}
 
 /** Descartar mano con la opción de robar de nuevo hasta el tamaño. */
 async function discardHandDialog(actor) {
@@ -31,10 +45,10 @@ async function discardHandDialog(actor) {
 
 /** Manos que ve el GM: todos los actores con mano (jugadores y PNJ), con sus cartas. */
 function handRows() {
-  return game.actors.filter(a => getHand(a)).map(a => {
+  return game.actors.filter(a => getHand(a) && isActiveActor(a)).map(a => {
     const cards = getHand(a).cards.contents.map(cardInfo);
     return {
-      id: a.id, name: a.name, type: a.type, deckType: deckTypeFor(a), count: cards.length, size: a.system.handSize,
+      id: a.id, name: a.name, type: a.type, deckType: deckTypeFor(a), count: cards.length, size: handSizeOfActor(a),
       cards: cards.map(c => ({ id: c.id, html: cardHtml(c, { small: true }) }))
     };
   }).sort((a, b) => a.deckType.localeCompare(b.deckType) || a.name.localeCompare(b.name));
@@ -109,6 +123,7 @@ export class TableApp extends HandlebarsApplicationMixin(ApplicationV2) {
       deckShuffleDiscard: TableApp.#deckShuffleDiscard, deckSearch: TableApp.#deckSearch, deckReveal: TableApp.#deckReveal,
       deckCreate: TableApp.#deckCreate, handOpen: TableApp.#handOpen, handDraw: TableApp.#handDraw, handFill: TableApp.#handFill,
       handDiscardAll: TableApp.#handDiscardAll, handUseTop: TableApp.#handUseTop, cardPlay: TableApp.#cardPlay,
+      handToDiscard: TableApp.#handToDiscard, deckDrawTo: TableApp.#deckDrawTo, sceneAdjust: TableApp.#sceneAdjust, removeDemo: TableApp.#removeDemo,
       cardDiscard: TableApp.#cardDiscard, cardToTop: TableApp.#cardToTop, cardToBottom: TableApp.#cardToBottom
     }
   };
@@ -125,8 +140,42 @@ export class TableApp extends HandlebarsApplicationMixin(ApplicationV2) {
         hands: hands.filter(h => h.deckType === type)
       };
     });
-    return { decks, isGM };
+    return { decks, isGM, scene: isGM ? this.#scene() : null };
   }
+
+  #scene() {
+    const users = game.users.filter(u => !u.isGM);
+    const row = a => ({
+      id: a.id, name: a.name, type: a.type, active: isActiveActor(a), demo: isDemo(a),
+      size: sceneSizeOverride(a) ?? "", sizeDefault: handSizeOfActor(a), hasHand: !!getHand(a),
+      userId: ownerUserOf(a),
+      users: users.map(u => ({ id: u.id, name: u.name, selected: u.id === ownerUserOf(a) }))
+    });
+    const byName = (x, y) => x.name.localeCompare(y.name);
+    return {
+      pcs: game.actors.filter(a => a.type === "character").map(row).sort((x, y) => y.active - x.active || byName(x, y)),
+      npcs: game.actors.filter(a => a.type !== "character").map(row).sort((x, y) => y.active - x.active || byName(x, y)),
+      hasDemo: game.actors.some(isDemo)
+    };
+  }
+
+  _onRender() {
+    const el = this.element;
+    const actorOf = node => game.actors.get(node.closest("[data-actor]")?.dataset.actor);
+    el.querySelectorAll("input[data-scene=active]").forEach(i => i.addEventListener("change", ev => setActorActive(actorOf(ev.target), ev.target.checked)));
+    el.querySelectorAll("select[data-scene=user]").forEach(s => s.addEventListener("change", ev => assignActorUser(actorOf(ev.target), ev.target.value)));
+    el.querySelectorAll("input[data-scene=size]").forEach(i => i.addEventListener("change", ev => setActorSize(actorOf(ev.target), ev.target.value)));
+  }
+
+  static #handToDiscard(ev, t) { return discardHand(TableApp.#actor(t), false); }
+  static async #deckDrawTo(ev, t) {
+    const sel = t.closest(".ouro-drawto")?.querySelector("select");
+    const actor = game.actors.get(sel?.value);
+    if (!actor) return ui.notifications.warn(L("OUROBOROS.Table.pickHand"));
+    await drawToHand(actor, 1);
+  }
+  static async #sceneAdjust(ev, t) { await adjustHand(TableApp.#actor(t)); this.render(); }
+  static #removeDemo() { return removeDemoDialog(); }
 
   static #actor(t) { return game.actors.get(t.dataset.actor); }
   static #deck(t) { return t.dataset.deck; }
@@ -189,7 +238,7 @@ export class HandApp extends HandlebarsApplicationMixin(ApplicationV2) {
   static PARTS = { body: { template: `${T}/hand-app.hbs` } };
 
   static candidates() {
-    return game.actors.filter(a => a.isOwner && (a.type === "character" || (game.user.isGM && hasHandFlag(a))));
+    return game.actors.filter(a => a.isOwner && isActiveActor(a));
   }
 
   get actor() {
@@ -207,7 +256,7 @@ export class HandApp extends HandlebarsApplicationMixin(ApplicationV2) {
     const s = deckSummary(type);
     return {
       isGM: game.user.isGM, actor, actors: HandApp.candidates().map(a => ({ id: a.id, name: a.name, selected: a.id === actor?.id })),
-      hasHand: !!hand, size: actor?.system.handSize ?? 0, count: cards.length,
+      hasHand: !!hand, size: actor ? handSizeOfActor(actor) : 0, count: cards.length,
       cards: cards.map(c => ({ id: c.id, html: cardHtml(c), name: c.name })),
       deck: { ...s, label: L(`OUROBOROS.Deck.${type}`) }
     };
@@ -258,7 +307,7 @@ export class GMPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     window: { title: "OUROBOROS.GMPanel", icon: "fa-solid fa-dragon", resizable: true },
     actions: {
       importAll: GMPanel.#import, macros: GMPanel.#macros, ensure: GMPanel.#ensure, resetDecks: GMPanel.#resetDecks,
-      openHand: GMPanel.#openHand, openActorHand: GMPanel.#openActorHand, openTable: GMPanel.#openTable, openGallery: GMPanel.#openGallery, openMap: GMPanel.#openMap, showMap: GMPanel.#showMap, toggleMarker: GMPanel.#toggleMarker, askCheck: GMPanel.#askCheck,
+      removeDemo: GMPanel.#removeDemo, openHand: GMPanel.#openHand, openActorHand: GMPanel.#openActorHand, openTable: GMPanel.#openTable, openGallery: GMPanel.#openGallery, openMap: GMPanel.#openMap, showMap: GMPanel.#showMap, toggleMarker: GMPanel.#toggleMarker, askCheck: GMPanel.#askCheck,
       request: GMPanel.#request, spawn: GMPanel.#spawn
     }
   };
@@ -276,6 +325,7 @@ export class GMPanel extends HandlebarsApplicationMixin(ApplicationV2) {
   static #macros() { return createMacros({ assign: true }); }
   static async #ensure() { await ensureDecksAndHands(); await dealEmptyHands(); this.render(); }
   static #resetDecks() { return resetDecks(); }
+  static #removeDemo() { return removeDemoDialog(); }
   static #openHand() { return game.ouroboros.openHand(); }
   static #openActorHand(ev, t) { return game.ouroboros.openHand(game.actors.get(t.dataset.actor)); }
   static #openTable() { return game.ouroboros.openTable(); }

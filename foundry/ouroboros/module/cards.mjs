@@ -1,6 +1,7 @@
 import {
   buildDeckSpec, parseCardName, SUITS, cardLabel, isFace, pileOrder, topIds, sortsFor, toBottom, toTop, topToBottom, reorderTop,
-  shuffled, discardOrder, needsReshuffle, addedIds, markPlayedFor
+  shuffled, discardOrder, needsReshuffle, addedIds, markPlayedFor,
+  sceneStateOf, defaultActive, isActiveIn, setActiveIn, setSizeIn, handSizeFor, isDemoActor, excessIds
 } from "./logic.mjs";
 
 const NS = "ouroboros";
@@ -84,6 +85,74 @@ async function createDiscard(type) {
   return CONFIG.Cards.documentClass.create({ name: `Descarte – ${DECK_NAMES[type]}`, type: "pile", flags: { [NS]: { discardOf: type } } });
 }
 
+/* ---------- Escena: actores activos y tamaño de mano (Setting de mundo `sceneState`) ---------- */
+const rawScene = () => game.settings.get(NS, "sceneState");
+const keyOf = a => a?.getFlag(NS, "id") ?? "";
+export const isDemo = a => isDemoActor({ key: keyOf(a), demo: a?.getFlag(NS, "demo") });
+export const isActiveActor = a => !!a && ["character", "npc", "creature"].includes(a.type)
+  && isActiveIn(rawScene(), a.id, defaultActive({ type: a.type, hand: !!a.getFlag(NS, "hand"), demo: isDemo(a) }));
+export const handSizeOfActor = a => handSizeFor(rawScene(), { id: a.id, type: a.type, key: keyOf(a), willpowerSize: a.system?.handSize ?? 2 });
+export const sceneSizeOverride = a => sceneStateOf(rawScene()).sizes[a.id] ?? null;
+
+/** Activa/desactiva un actor en la escena. Al activar se crea y rellena su mano; al desactivar su mano va al descarte. */
+export async function setActorActive(actor, on) {
+  if (!game.user.isGM) return;
+  await game.settings.set(NS, "sceneState", setActiveIn(rawScene(), actor.id, on));
+  if (getDeck("players") && getDeck("gm")) {
+    if (on) { await ensureHand(actor); await fillHand(actor); }
+    else if (getHand(actor)?.cards.size) await discardHand(actor, false);
+  }
+  await publishTable();
+}
+
+export async function setActorSize(actor, size) {
+  if (!game.user.isGM) return;
+  await game.settings.set(NS, "sceneState", setSizeIn(rawScene(), actor.id, size));
+}
+
+/** Propietario único (jugador de Foundry) del personaje; `userId` vacío lo deja sin jugador. */
+export const ownerUserOf = actor => game.users.find(u => !u.isGM && actor.ownership?.[u.id] === OWNER())?.id ?? "";
+export async function assignActorUser(actor, userId) {
+  if (!game.user.isGM) return;
+  const update = {};
+  for (const u of game.users) {
+    if (u.isGM) continue;
+    if (u.id === userId) update[`ownership.${u.id}`] = OWNER();
+    else if (actor.ownership?.[u.id] !== undefined) update[`ownership.-=${u.id}`] = null;
+  }
+  if (Object.keys(update).length) await actor.update(update);
+  for (const u of game.users) {
+    if (u.isGM) continue;
+    if (u.id === userId) await u.update({ character: actor.id });
+    else if (u.character?.id === actor.id) await u.update({ character: null });
+  }
+}
+
+/** Elimina los pregenerados de demo (Viktor, Elena, Dmitri, Magnus) y sus manos. Devuelve cuántos. */
+export async function removeDemoActors() {
+  if (!game.user.isGM) return 0;
+  const actors = game.actors.filter(isDemo);
+  for (const a of actors) {
+    const hand = getHand(a);
+    if (hand) {
+      if (hand.cards.size && getDiscard(deckTypeFor(a))) await discardHand(a, false);
+      await hand.delete();
+    }
+  }
+  if (actors.length) await Actor.deleteDocuments(actors.map(a => a.id));
+  const folder = game.folders.find(f => f.type === "Actor" && f.name === "Ouroboros: Demo");
+  if (folder && !folder.contents.length) await folder.delete();
+  await publishTable();
+  return actors.length;
+}
+
+/** Ajusta la mano al tamaño configurado: roba si faltan cartas y descarta las sobrantes. */
+export async function adjustHand(actor) {
+  const size = handSizeOfActor(actor);
+  await callOp("fill", { actorId: actor.id, size });
+  await callOp("trim", { actorId: actor.id, size });
+}
+
 /* ---------- Manos ---------- */
 function handOwnership(actor) {
   const own = { default: NONE() };
@@ -106,24 +175,23 @@ export async function ensureHand(actor) {
   return hand;
 }
 
-export async function ensureDecksAndHands({ npcs = [] } = {}) {
+export async function ensureDecksAndHands() {
   if (!game.user.isGM) return;
   for (const type of ["players", "gm"]) {
     if (!getDeck(type)) await createDeck(type);
     if (!getDiscard(type)) await createDiscard(type);
   }
-  const wanted = new Set([...game.actors.filter(a => a.type === "character" || a.getFlag(NS, "hand")), ...npcs]);
-  for (const a of wanted) await ensureHand(a);
+  for (const a of game.actors.filter(isActiveActor)) await ensureHand(a);
   await publishTable();
 }
 
-/** Reparte hasta su tamaño a toda mano vacía (jugadores y PNJ con `flags.ouroboros.hand`). Devuelve cuántas repartió. */
+/** Reparte hasta su tamaño a toda mano vacía de un actor activo. Devuelve cuántas repartió. */
 export async function dealEmptyHands() {
   if (!game.user.isGM || !getDeck("players") || !getDeck("gm")) return 0;
   let n = 0;
   for (const a of game.actors) {
     const hand = getHand(a);
-    if (hand && !hand.cards.size && (a.type !== "character" || a.getFlag(NS, "id"))) { await fillHand(a); n++; }
+    if (hand && !hand.cards.size && isActiveActor(a)) { await fillHand(a); n++; }
   }
   return n;
 }
@@ -134,6 +202,10 @@ export async function dealEmptyHands() {
  */
 export function registerTableSetting() {
   game.settings.register(NS, "tableState", {
+    scope: "world", config: false, type: Object, default: {},
+    onChange: () => Hooks.callAll("ouroborosTable")
+  });
+  game.settings.register(NS, "sceneState", {
     scope: "world", config: false, type: Object, default: {},
     onChange: () => Hooks.callAll("ouroborosTable")
   });
@@ -237,6 +309,15 @@ const OPS = {
     await deck.pass(discard, topIds(pileIds(deck), 1), discardData());
     return cardInfo(discard.cards.get(addedIds(before, discard.cards.map(c => c.id))[0]));
   },
+  /** Descarta las cartas que sobran sobre `size`. */
+  async trim({ actorId, size }) {
+    const actor = game.actors.get(actorId);
+    const hand = getHand(actor);
+    if (!hand) return 0;
+    const ids = excessIds(handIds(hand), size);
+    await toDiscard(hand, stacks(deckTypeFor(actor)).discard, ids);
+    return ids.length;
+  },
   async discardHand({ actorId, refill: again = false, size = 0 }) {
     const actor = game.actors.get(actorId);
     const hand = await ensureHand(actor);
@@ -314,7 +395,7 @@ const OPS = {
   }
 };
 
-const GM_ONLY = new Set(["search", "takeCard", "reset"]);
+const GM_ONLY = new Set(["search", "takeCard", "reset", "trim"]);
 const READONLY = new Set(["peek", "search", "applyHp", "galleryPlayed"]);
 
 async function runOp(op, args) {
@@ -372,8 +453,8 @@ export async function handleOpSocket(msg) {
 
 /* ---------- API pública ---------- */
 export const drawToHand = async (actor, n = 1) => callOp("draw", { actorId: actor.id, n });
-export const fillHand = async actor => callOp("fill", { actorId: actor.id, size: actor.system.handSize });
-export const discardHand = async (actor, refill = false) => callOp("discardHand", { actorId: actor.id, refill, size: actor.system.handSize });
+export const fillHand = async actor => callOp("fill", { actorId: actor.id, size: handSizeOfActor(actor) });
+export const discardHand = async (actor, refill = false) => callOp("discardHand", { actorId: actor.id, refill, size: handSizeOfActor(actor) });
 export const restHand = actor => discardHand(actor, true);
 export const topCard = async (deckType = "players") => callOp("top", { deckType });
 export const blindDraw = topCard;

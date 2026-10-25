@@ -31,7 +31,7 @@ async function requestCheckById(id) {
   const chk = (await Importer.loadData("checks")).find(c => c.id === id);
   if (!chk) return ui.notifications.error(`Chequeo desconocido: ${id}`);
   const ids = chk.who.flatMap(w => (w === "party"
-    ? game.actors.filter(a => a.type === "character" && a.hasPlayerOwner).map(a => a.id)
+    ? game.actors.filter(a => a.type === "character" && a.hasPlayerOwner && Cards.isActiveActor(a)).map(a => a.id)
     : [Importer.actorByKey(w)?.id])).filter(Boolean);
   if (!ids.length) return ui.notifications.warn("No hay actores para este chequeo (¿importaste la aventura?).");
   return Rolls.requestCheck(chk, ids);
@@ -97,6 +97,7 @@ Hooks.once("init", () => {
   ]);
 
   Cards.registerTableSetting();
+  Importer.registerImporterSettings();
   Gallery.registerGallerySettings();
   MapView.registerMapSettings();
   game.settings.registerMenu(NS, "gmPanel", {
@@ -175,7 +176,7 @@ Hooks.on("ouroborosTable", () => {
 Hooks.on("renderChatMessageHTML", (message, html) => Rolls.bindChat(message, html));
 
 Hooks.on("createActor", actor => {
-  if (game.user.isActiveGM && actor.type === "character" && Cards.getDeck("players")) Cards.ensureHand(actor);
+  if (game.user.isActiveGM && Cards.isActiveActor(actor) && Cards.getDeck("players")) Cards.ensureHand(actor);
 });
 Hooks.on("updateActor", (actor, changes) => {
   if (game.user.isActiveGM && ("ownership" in changes || "name" in changes) && Cards.getHand(actor)) Cards.ensureHand(actor);

@@ -298,3 +298,35 @@ export const toPct = v => Math.round(unit(v) * 10000) / 100;
 /** Clic en un rectángulo {left, top, width, height} → coordenadas normalizadas. */
 export const clickToNorm = (rect, clientX, clientY) =>
   rect.width > 0 && rect.height > 0 ? { x: unit((clientX - rect.left) / rect.width), y: unit((clientY - rect.top) / rect.height) } : null;
+
+/* ---------- Escena de la Mesa: actores activos y tamaño de mano ---------- */
+export const DEMO_KEYS = ["viktor", "elena", "dmitri", "magnus"];
+export const NPC_HAND_DEFAULT = 2;
+export const NPC_HAND_SIZES = { bathsheba: 3, manifestacion: 2 };
+export const HAND_MAX = 20;
+export const isDemoActor = ({ key = "", demo = false } = {}) => !!demo || DEMO_KEYS.includes(key);
+export function sceneStateOf(raw) {
+  const active = {}, sizes = {};
+  for (const [id, v] of Object.entries(raw?.active ?? {})) active[id] = !!v;
+  for (const [id, v] of Object.entries(raw?.sizes ?? {})) { const k = Math.trunc(Number(v)); if (k >= 1) sizes[id] = Math.min(HAND_MAX, k); }
+  return { active, sizes };
+}
+/** Por defecto: jugadores activos salvo los de la demo; PNJ/criaturas activos solo si el pregenerado trae mano. */
+export const defaultActive = ({ type, hand = false, demo = false } = {}) => !demo && (type === "character" || !!hand);
+export const isActiveIn = (raw, id, dflt) => { const s = sceneStateOf(raw); return Object.hasOwn(s.active, id) ? s.active[id] : !!dflt; };
+export const setActiveIn = (raw, id, on) => { const s = sceneStateOf(raw); return { ...s, active: { ...s.active, [id]: !!on } }; };
+/** `size` vacío/0/NaN quita el override. */
+export function setSizeIn(raw, id, size) {
+  const s = sceneStateOf(raw), sizes = { ...s.sizes };
+  const k = Math.trunc(Number(size));
+  if (k >= 1) sizes[id] = Math.min(HAND_MAX, k); else delete sizes[id];
+  return { ...s, sizes };
+}
+/** Tamaño de mano: override del GM > PNJ (Bathsheba 3, resto 2) > Voluntad (jugadores). */
+export function handSizeFor(raw, { id, type, key = "", willpowerSize = 2 }) {
+  const s = sceneStateOf(raw);
+  if (s.sizes[id]) return s.sizes[id];
+  return type === "character" ? Math.max(1, willpowerSize) : (NPC_HAND_SIZES[key] ?? NPC_HAND_DEFAULT);
+}
+/** Ids de las cartas que sobran para ajustar la mano a `size` (las últimas). */
+export const excessIds = (ids, size) => ids.slice(Math.max(0, size));

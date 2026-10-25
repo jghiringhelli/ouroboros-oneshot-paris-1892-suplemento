@@ -11,6 +11,12 @@ export async function loadData(name) {
 }
 const loadText = async file => (await fetch(foundry.utils.getRoute(`${BASE}/journals/${file}`))).text();
 
+export function registerImporterSettings() {
+  game.settings.register(NS, "includeDemo", {
+    name: "OUROBOROS.Settings.includeDemo", hint: "OUROBOROS.Settings.includeDemoHint", scope: "world", config: true, type: Boolean, default: false
+  });
+}
+
 const byFlag = (coll, id) => coll.find(d => d.getFlag(NS, "id") === id);
 export const actorByKey = key => byFlag(game.actors, key);
 
@@ -39,7 +45,7 @@ function actorData(def, itemDefs, folder) {
       name: def.name, actorLink: isPC || !!def.hand, disposition: isPC ? 1 : -1,
       bar1: { attribute: "hp" }, displayBars: CONST.TOKEN_DISPLAY_MODES.OWNER, displayName: CONST.TOKEN_DISPLAY_MODES.OWNER
     },
-    flags: { [NS]: { id: def.key, hand: !!def.hand } }
+    flags: { [NS]: { id: def.key, hand: !!def.hand, demo: !!def.demo } }
   };
 }
 
@@ -59,7 +65,9 @@ async function importActors(itemDefs) {
   const defs = await loadData("actors");
   const folders = {};
   const created = [];
+  const withDemo = game.settings.get(NS, "includeDemo");
   for (const def of defs) {
+    if (def.demo && !withDemo) continue;
     if (actorByKey(def.key)) continue;
     folders[def.folder] ??= await folderFor(def.folder, "Actor");
     const actor = await Actor.create(actorData(def, itemDefs, folders[def.folder]));

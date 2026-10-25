@@ -1,5 +1,6 @@
 import { SKILL_TN, SAVE_TN, normMode } from "./logic.mjs";
 import { requestCheck } from "./rolls.mjs";
+import { isActiveActor } from "./cards.mjs";
 
 const { DialogV2 } = foundry.applications.api;
 const L = k => game.i18n.localize(k);
@@ -21,7 +22,7 @@ function parseStat(value, skillName, circle) {
 
 /** Diálogo del GM «Pedir chequeo»: prueba, TN, modo consciente/pasivo y destino. */
 export async function requestCheckDialog() {
-  const chars = game.actors.filter(a => a.type === "character" && a.hasPlayerOwner);
+  const chars = game.actors.filter(a => a.type === "character" && a.hasPlayerOwner && isActiveActor(a));
   const stats = `<optgroup label="${L("OUROBOROS.Check.abilities")}">${ABILITIES.map(k => opt(`ability:${k}`, L("OUROBOROS.Ability." + k), k === "perception")).join("")}</optgroup>` +
     `<optgroup label="${L("OUROBOROS.Check.saves")}">${SAVES.map(k => opt(`save:${k}`, L("OUROBOROS.Save." + k))).join("")}</optgroup>`;
   const content = `<div class="ouroboros-dialog ouro-checkdlg">

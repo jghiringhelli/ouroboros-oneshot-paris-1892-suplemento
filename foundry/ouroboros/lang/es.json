@@ -136,7 +136,8 @@
       "shuffle": "Barajar",
       "reset": "Reiniciar",
       "missing": "No existe.",
-      "create": "Crear mazos y manos"
+      "create": "Crear mazos y manos",
+      "enemies": "Mazo del GM (enemigos y PNJ)"
     },
     "Hand": {
       "title": "Mano",
@@ -261,7 +262,9 @@
       "encounters": "Combates",
       "spawn": "Ficha de criaturas al GM",
       "checks": "Pedir chequeos",
-      "table": "Mesa y manos"
+      "table": "Mesa y manos",
+      "hands": "Manos (jugadores y PNJ)",
+      "gmTable": "Mesa del GM (mazos y manos)"
     },
     "Settings": {
       "panel": "Panel del GM",
@@ -326,7 +329,16 @@
       "drawPile": "Pila de robo",
       "discardPile": "Descarte",
       "discardOrder": "Descarte en orden: la última carta descartada va primero.",
-      "discardEmpty": "Descarte vacío."
+      "discardEmpty": "Descarte vacío.",
+      "reveal": "Revelar tope al descarte",
+      "hands": "Manos",
+      "noHands": "Ninguna mano creada. Pulsa «Crear mazos y manos» en el Panel del GM.",
+      "discardCard": "Descartar",
+      "logReveal": "descubre la carta de arriba del mazo:",
+      "logDiscardCard": "descarta de la mano:",
+      "discardpile": "Descarte",
+      "discardorder": "Descarte en orden: la última carta descartada va primero.",
+      "discardempty": "Descarte vacío."
     },
     "Use": {
       "title": "Uso de la carta",

@@ -63,10 +63,23 @@
     <div class="ouro-row-buttons">
       <button type="button" data-action="rollAttack"><i class="fa-solid fa-hand-fist"></i> {{localize 'OUROBOROS.Roll.attack'}}</button>
       <button type="button" data-action="drawCard"><i class="fa-solid fa-plus"></i> {{localize 'OUROBOROS.Hand.draw'}}</button>
-      {{#unless hasHand}}<button type="button" data-action="createHand">{{localize 'OUROBOROS.Hand.create'}}</button>{{/unless}}
+      {{#unless hasHand}}{{#if isGM}}<button type="button" data-action="createHand">{{localize 'OUROBOROS.Hand.create'}}</button>{{/if}}{{/unless}}
+      {{#if hasHand}}
+      <button type="button" data-action="fillHand"><i class="fa-solid fa-hand"></i> {{localize 'OUROBOROS.Hand.fill'}}</button>
+      <button type="button" data-action="discardHand"><i class="fa-solid fa-trash"></i> {{localize 'OUROBOROS.Hand.discardAll'}}</button>
+      <button type="button" data-action="useTop">{{localize 'OUROBOROS.Table.useTop'}}</button>
+      {{/if}}
     </div>
     {{#if hasHand}}
     <div class="ouro-handline">{{localize 'OUROBOROS.Hand.title'}}: {{handCount}} / {{system.handSize}}</div>
+    <div class="ouro-handrow">
+      {{#each handCards}}
+      <div class="ouro-hc">{{{html}}}
+        <button type="button" data-action="playCard" data-id="{{id}}">{{localize 'OUROBOROS.Hand.play'}}</button>
+        <button type="button" data-action="discardCard" data-id="{{id}}">{{localize 'OUROBOROS.Table.discardCard'}}</button>
+      </div>
+      {{else}}<span class="ouro-empty">{{localize 'OUROBOROS.Hand.empty'}}</span>{{/each}}
+    </div>
     {{/if}}
 
     {{#if isCharacter}}

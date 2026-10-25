@@ -10,12 +10,27 @@
   "manifest": "https://raw.githubusercontent.com/jghiringhelli/ouroboros-oneshot-paris-1892-suplemento/main/foundry/ouroboros/system.json",
   "download": "https://github.com/jghiringhelli/ouroboros-oneshot-paris-1892-suplemento/releases/latest/download/ouroboros-system.zip",
   "authors": [
-    { "name": "Ouroboros RPG" }
+    {
+      "name": "Ouroboros RPG"
+    }
   ],
-  "esmodules": ["module/ouroboros.mjs"],
-  "styles": ["css/ouroboros.css"],
+  "esmodules": [
+    "module/ouroboros.mjs"
+  ],
+  "styles": [
+    "css/ouroboros.css"
+  ],
   "languages": [
-    { "lang": "es", "name": "Español", "path": "lang/es.json" }
+    {
+      "lang": "es",
+      "name": "Español",
+      "path": "lang/es.json"
+    },
+    {
+      "lang": "en",
+      "name": "English (textos en español)",
+      "path": "lang/es.json"
+    }
   ],
   "socket": true,
   "documentTypes": {
@@ -32,5 +47,8 @@
     }
   },
   "primaryTokenAttribute": "hp",
-  "grid": { "distance": 1.5, "units": "m" }
+  "grid": {
+    "distance": 1.5,
+    "units": "m"
+  }
 }

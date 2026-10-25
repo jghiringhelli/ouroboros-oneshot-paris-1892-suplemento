@@ -16,8 +16,18 @@
 .ouroboros a:hover { color: #fff; text-shadow: none; }
 
 .ouro-sheet { display: flex; flex-direction: column; height: 100%; padding: 8px; gap: 6px; box-sizing: border-box; }
-.ouro-app .ouro-sheet { height: auto; }
-.ouro-scroll { overflow-y: auto; flex: 1; padding-right: 4px; }
+/* Las ventanas con altura fija deben acotar su contenido para que .ouro-scroll desplace (listas largas) */
+.ouro-app .window-content { display: flex; flex-direction: column; overflow: hidden; }
+.ouro-app .ouro-sheet { height: auto; flex: 1 1 auto; min-height: 0; }
+.ouro-scroll { overflow-y: auto; flex: 1 1 auto; min-height: 0; padding-right: 4px; }
+.ouro-gallerylist .ouro-scroll { scrollbar-gutter: stable; }
+.ouro-dir-buttons { display: flex; gap: 4px; padding: 4px 8px; flex-wrap: wrap; }
+.ouro-dir-buttons button { flex: 1 1 auto; }
+.ouro-handrow { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; margin: 2px 0 6px; }
+.ouro-handrow .ouro-hc { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.ouro-handrow .ouro-hc button { padding: 0 6px; font-size: .75em; }
+.ouro-gmhand { background: var(--o-panel); border: 1px solid var(--o-line); border-radius: 3px; padding: 4px 6px; margin-bottom: 6px; }
+.ouro-gmhand h4 { margin: 0 0 4px; }
 .ouro-gmpanel { height: 100%; }
 
 .ouro-head { display: flex; gap: 10px; align-items: center; border-bottom: 2px solid var(--o-gold); padding-bottom: 6px; }

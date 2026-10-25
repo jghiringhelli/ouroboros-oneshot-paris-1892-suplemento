@@ -1,4 +1,4 @@
-import { ensureDecksAndHands, getHand, fillHand } from "./cards.mjs";
+import { ensureDecksAndHands, dealEmptyHands } from "./cards.mjs";
 
 const NS = "ouroboros";
 const BASE = "systems/ouroboros/data";
@@ -130,7 +130,7 @@ export async function createMacros({ assign = false } = {}) {
     });
     made.push(macro);
   }
-  if (assign && game.user.isGM) {
+  if (assign && game.user.isGM) try {
     const hotbar = game.user.hotbar ?? {};
     const inBar = new Set(Object.values(hotbar));
     let slot = 1;
@@ -141,7 +141,7 @@ export async function createMacros({ assign = false } = {}) {
       await game.user.assignHotbarMacro(macro, slot);
       hotbar[slot] = macro.id;
     }
-  }
+  } catch (e) { console.warn("Ouroboros | no se pudo asignar la barra de macros (API v14)", e); }
   return made.length;
 }
 
@@ -171,13 +171,9 @@ export async function importAdventure() {
     const actors = await importActors(itemDefs);
     const journals = await importJournals();
     const macros = await createMacros({ assign: true });
-    await ensureDecksAndHands({ npcs: game.actors.filter(a => a.getFlag(NS, "hand")) });
-    let hands = 0;
-    for (const actor of game.actors.filter(a => a.type === "character" && a.getFlag(NS, "id"))) {
-      const hand = getHand(actor);
-      if (hand && !hand.cards.size) { await fillHand(actor); hands++; }
-    }
-    ui.notifications.info(`Ouroboros: importado (${items} objetos, ${actors} actores, ${journals} diarios, ${macros} macros). Mazos listos y ${hands} manos repartidas.`);
+    await ensureDecksAndHands();
+    const hands = await dealEmptyHands();
+    ui.notifications.info(`Ouroboros: importado (${items} objetos, ${actors} actores, ${journals} diarios, ${macros} macros). Mazos listos y ${hands} manos repartidas (jugadores y PNJ).`);
   } catch (e) {
     console.error(e);
     ui.notifications.error(`Ouroboros: error al importar: ${e.message}`);

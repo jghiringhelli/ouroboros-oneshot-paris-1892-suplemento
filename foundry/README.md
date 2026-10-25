@@ -8,6 +8,15 @@ Sistema de rol sin dados (todo con cartas), interfaz en español. Incluye el one
 3. Reinicia Foundry, crea un mundo con el sistema **Ouroboros RPG** y entra como GM.
 4. **Importar**: Ajustes → Configuración del sistema → *Importar aventura* (o consola: `game.ouroboros.importAdventure()`). Es idempotente: se puede repetir sin duplicar. Crea carpetas, 5 pregenerados (Edwina, Jane, Clovis, Donatien, Rochefort) + 4 demo, PNJ/criaturas, armas/armaduras/poderes, 4 diarios, mazos «Mazo de Jugadores» y «Mazo del GM» (con su descarte), manos (los 5 pregenerados y los 4 demo reciben su mano) y macros en la barra. No crea ninguna escena.
 
+## Cómo usar como GM
+Requisito: **el GM debe estar conectado** (los jugadores operan los mazos a través de él). Idioma: el sistema trae sus textos en español y los registra para `es` y `en`; no hace falta cambiar el idioma de Foundry.
+
+1. **Primera vez**: *Ajustes → Configurar ajustes → Ouroboros RPG → Panel del GM* (o botón **Panel del GM** en la cabecera de la pestaña *Actores*, o el icono del dragón en los controles de *Tokens*). Pulsa **Importar aventura**: crea actores (5 pregenerados + PNJ/criaturas), diarios, macros, los 2 mazos y **reparte las manos de jugadores y de los PNJ/criaturas con mano** (Bathsheba, Manifestación, Minotauro, Kraken, Péladan, La Rush).
+2. **Mesa del GM** (mazos y manos de todos): pestaña *Actores* → botón **Mesa del GM**; o Panel del GM → *Mesa y manos* → **Mesa del GM**; o macro *Mesa (mazos)*. Para cada mazo (jugadores y GM/enemigos) ves pila de robo, descarte en orden y botones: *Mirar el tope (peek)* y reordenar, *Revelar tope al descarte*, *Tope al fondo*, *Barajar*, *Barajar descarte al mazo*, *Buscar carta*. Debajo, **cada mano** con sus cartas visibles y botones: por carta *Jugar* (pide el uso y lo publica en el chat), *Descartar*, ↑/↓ al tope/fondo del mazo; por mano *Abrir mano*, *Robar*, *Rellenar mano*, *Descartar mano* (con o sin robar de nuevo) y *Usar tope*.
+3. **Mano de un PNJ**: desde la Mesa del GM (arriba), desde el Panel del GM → *Manos (jugadores y PNJ)* (icono ♦), desde su **ficha** (botón de la mano; la ficha muestra ahora las cartas con *Jugar/Descartar/Rellenar/Descartar mano/Usar tope*) o con la ventana **Mano** (selector de actor). Si un PNJ no tiene mano, en su ficha aparece *Crear mano* (la crea y reparte).
+4. **Pedir chequeo** (consciente/pasivo): Panel del GM → *Pedir chequeo* (o macro), o el botón de papel junto a cada chequeo del Panel.
+5. **Galería**: Panel del GM → *Galería* (la lista tiene scroll). Marca jugadores, elige modo/TN y pulsa el ojo (*Mostrar*), ▶ (*Disparar ya*, sin chequeo) o ↺ (*Reiniciar*). *Transformar sin avisar* y *Ocultar* actúan sobre los marcados. En la misma ventana: retratos y carteles.
+6. **Mapa**: Panel del GM → *Mapa de París* y *Mostrar mapa a todos*; ojo para revelar lugares; *Mover el grupo* y clic en el plano.
 ## Teatro de la mente: Mesa, manos y mazos
 No hay mapa, tokens ni escenas: todo es chat, ventanas y cartas. Los mazos («Mazo de Jugadores» y «Mazo del GM») son **compartidos**.
 - **Mesa** (botón ▦ de escena, macro *Mesa (mazos)* o `game.ouroboros.openTable()`): ventana visible para todos con, por cada mazo, la **pila de robo** (solo el conteo; su orden nunca se publica) y la **pila de descarte completa en orden** (la última carta descartada arriba).
@@ -29,7 +38,7 @@ Ouroboros no tiene dados: lo más parecido a una tirada es **una carta**. Hay do
 - **Pedir chequeo** (GM; macro, botón de la Mano o Panel del GM): TN (numérico o por dificultad), habilidad/atributo/salvación o habilidad de ficha, pista, **modo** y **destino** (un personaje o todos). También los botones «Pedir» de los diarios (`@Chequeo[id]`).
 
 ## Galería sin mapa
-Ventana **Galería** (GM: botón de escena, macro *Galería* o `game.ouroboros.openGallery()`) con las 10 pinturas (imagen original).
+Ventana **Galería** (GM: botón de escena, macro *Galería* o `game.ouroboros.openGallery()`) con las 11 obras (la 11, «La transformación de Bathsheba», parte de la estatua, reproduce el vídeo estatua→mujer y queda congelada en la mujer) (imagen original).
 - **Mostrar** una pintura a los jugadores marcados: la ven en una ventana grande. Por pintura se configura el **TN** (por defecto *Moderate*) y el **modo** (pasivo por defecto, consciente, o sin chequeo).
 - **Pasivo**: tras unos segundos el GM fuerza el tope del mazo del personaje (Percepción). **Consciente**: al jugador se le pide elegir carta de su mano.
 - **Éxito**: se reproduce el **vídeo MP4 local**, una vez y silenciado, en su ventana; después queda **congelada** en la imagen original; además recibe un **susurro** (solo él y el GM) con los enlaces raw al vídeo y a la imagen macabra. **Fallo**: solo un texto atmosférico y la imagen sigue fija. Cada jugador lo ve una vez por pintura (estado en el Setting de mundo `galleryState`).
@@ -63,6 +72,8 @@ El overlay de la Galería es el mismo mecanismo de siempre (imagen pura, morph a
 - [ ] Iniciativa en el Combat tracker.
 - [ ] Mesa abierta en un segundo navegador (jugador): conteo de la pila y descarte en orden se actualizan.
 - [ ] Chequeo pasivo desde «Pedir chequeo»: el jugador solo ve lo percibido; el GM ve TN y carta.
+- [ ] Mesa del GM: ves las manos de Bathsheba y los demás PNJ con cartas, y puedes robar/jugar/descartar por PNJ.
+- [ ] La lista de la Galería hace scroll y se alcanzan las 11 obras y los retratos/carteles.
 - [ ] Mapa: *Mostrar mapa a todos* lo abre a los jugadores; revelar un lugar lo hace aparecer; mover el grupo mueve el pin dorado.
 - [ ] Mostrar una pintura a un jugador: éxito → vídeo una vez y susurro con enlaces; fallo → texto atmosférico.
 - [ ] «Colocar» un combate desde el diario susurra la lista de criaturas al GM.

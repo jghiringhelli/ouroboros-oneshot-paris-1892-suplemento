@@ -7,12 +7,48 @@
       <div class="ouro-pile ouro-pile-back" title="{{localize 'OUROBOROS.Table.drawPile'}}"><strong>{{left}}</strong><small>{{localize 'OUROBOROS.Table.drawPile'}}</small></div>
       <div class="ouro-pile" title="{{localize 'OUROBOROS.Table.discardPile'}}"><strong>{{discard}}</strong><small>{{localize 'OUROBOROS.Table.discardPile'}}</small></div>
     </div>
+    {{#if ../isGM}}
+    <div class="ouro-row-buttons">
+      <button type="button" data-action="deckPeek" data-deck="{{type}}"><i class="fa-solid fa-eye"></i> {{localize 'OUROBOROS.Table.peek'}}</button>
+      <button type="button" data-action="deckReveal" data-deck="{{type}}"><i class="fa-solid fa-layer-group"></i> {{localize 'OUROBOROS.Table.reveal'}}</button>
+      <button type="button" data-action="deckTopToBottom" data-deck="{{type}}">{{localize 'OUROBOROS.Table.topToBottom'}}</button>
+      <button type="button" data-action="deckShuffle" data-deck="{{type}}"><i class="fa-solid fa-shuffle"></i> {{localize 'OUROBOROS.Deck.shuffle'}}</button>
+      <button type="button" data-action="deckShuffleDiscard" data-deck="{{type}}">{{localize 'OUROBOROS.Table.shuffleDiscard'}}</button>
+      <button type="button" data-action="deckSearch" data-deck="{{type}}"><i class="fa-solid fa-magnifying-glass"></i> {{localize 'OUROBOROS.Table.search'}}</button>
+    </div>
+    <h4>{{localize 'OUROBOROS.Table.hands'}}</h4>
+    {{#each hands}}
+    <div class="ouro-gmhand">
+      <h4>{{name}} <small>({{count}} / {{size}})</small></h4>
+      <div class="ouro-handrow">
+        {{#each cards}}
+        <div class="ouro-hc">{{{html}}}
+          <button type="button" data-action="cardPlay" data-actor="{{../id}}" data-id="{{id}}">{{localize 'OUROBOROS.Hand.play'}}</button>
+          <button type="button" data-action="cardDiscard" data-actor="{{../id}}" data-id="{{id}}">{{localize 'OUROBOROS.Table.discardCard'}}</button>
+          <span class="ouro-mini">
+            <a data-action="cardToTop" data-actor="{{../id}}" data-id="{{id}}" title="{{localize 'OUROBOROS.Table.handToTop'}}"><i class="fa-solid fa-arrow-up"></i></a>
+            <a data-action="cardToBottom" data-actor="{{../id}}" data-id="{{id}}" title="{{localize 'OUROBOROS.Table.handToBottom'}}"><i class="fa-solid fa-arrow-down"></i></a>
+          </span>
+        </div>
+        {{else}}<span class="ouro-empty">{{localize 'OUROBOROS.Hand.empty'}}</span>{{/each}}
+      </div>
+      <div class="ouro-row-buttons">
+        <button type="button" data-action="handOpen" data-actor="{{id}}"><i class="fa-solid fa-diamond"></i> {{localize 'OUROBOROS.Hand.open'}}</button>
+        <button type="button" data-action="handDraw" data-actor="{{id}}"><i class="fa-solid fa-plus"></i> {{localize 'OUROBOROS.Hand.draw'}}</button>
+        <button type="button" data-action="handFill" data-actor="{{id}}"><i class="fa-solid fa-hand"></i> {{localize 'OUROBOROS.Hand.fill'}}</button>
+        <button type="button" data-action="handDiscardAll" data-actor="{{id}}"><i class="fa-solid fa-trash"></i> {{localize 'OUROBOROS.Hand.discardAll'}}</button>
+        <button type="button" data-action="handUseTop" data-actor="{{id}}">{{localize 'OUROBOROS.Table.useTop'}}</button>
+      </div>
+    </div>
+    {{else}}<p class="ouro-empty">{{localize 'OUROBOROS.Table.noHands'}}</p>{{/each}}
+    {{/if}}
     <p class="hint">{{localize 'OUROBOROS.Table.discardOrder'}}</p>
     <div class="ouro-discard">
       {{#each cards}}{{{html}}}{{else}}<span class="ouro-empty">{{localize 'OUROBOROS.Table.discardEmpty'}}</span>{{/each}}
     </div>
     {{else}}
     <p class="ouro-empty">{{localize 'OUROBOROS.Deck.missing'}}</p>
+    {{#if ../isGM}}<button type="button" data-action="deckCreate">{{localize 'OUROBOROS.Deck.create'}}</button>{{/if}}
     {{/if}}
     {{/each}}
   </div>

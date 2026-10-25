@@ -1,6 +1,6 @@
 import { CIRCLES, SUITS } from "./logic.mjs";
 import * as Rolls from "./rolls.mjs";
-import { getHand, cardInfo, ensureHand } from "./cards.mjs";
+import { getHand, cardInfo, ensureHand, fillHand, discardHand, playFromHand, logTable } from "./cards.mjs";
 
 const { HandlebarsApplicationMixin } = foundry.applications.api;
 const { ActorSheetV2, ItemSheetV2 } = foundry.applications.sheets;
@@ -39,7 +39,12 @@ export class OuroborosActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
       drawCard: OuroborosActorSheet.#drawCard,
       plantSeed: OuroborosActorSheet.#plantSeed,
       createWork: OuroborosActorSheet.#createWork,
-      createHand: OuroborosActorSheet.#createHand
+      createHand: OuroborosActorSheet.#createHand,
+      fillHand: OuroborosActorSheet.#fillHand,
+      discardHand: OuroborosActorSheet.#discardHand,
+      useTop: OuroborosActorSheet.#useTop,
+      playCard: OuroborosActorSheet.#playCard,
+      discardCard: OuroborosActorSheet.#discardCard
     }
   };
 
@@ -74,7 +79,8 @@ export class OuroborosActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
     ctx.jobSuitSymbol = SUITS[s.job.suit]?.symbol ?? "";
     const hand = getHand(doc);
     ctx.hasHand = !!hand;
-    ctx.handCards = hand ? hand.cards.contents.map(cardInfo) : [];
+    ctx.isGM = game.user.isGM;
+    ctx.handCards = hand ? hand.cards.contents.map(c => { const i = cardInfo(c); return { id: i.id, html: Rolls.cardHtml(i, { small: true }) }; }) : [];
     ctx.handCount = ctx.handCards.length;
     return ctx;
   }
@@ -136,7 +142,15 @@ export class OuroborosActorSheet extends HandlebarsApplicationMixin(ActorSheetV2
   static async #drawCard() { await Rolls.drawAndAnnounce(this.document, 1); this.render(); }
   static #plantSeed() { return Rolls.plantSeed(this.document); }
   static #createWork() { return Rolls.createWork(this.document); }
-  static async #createHand() { await ensureHand(this.document); this.render(); }
+  static async #createHand() { await ensureHand(this.document); await fillHand(this.document); this.render(); }
+  static #fillHand() { return fillHand(this.document); }
+  static #discardHand() { return discardHand(this.document, false); }
+  static #useTop() { return Rolls.useTopCard(this.document); }
+  static #playCard(ev, t) { return Rolls.playWithUse(this.document, t.dataset.id); }
+  static async #discardCard(ev, t) {
+    const [info] = await playFromHand(this.document, [t.dataset.id]);
+    await logTable(this.document.name, `${L("OUROBOROS.Table.logDiscardCard")} ${Rolls.cardHtml(info, { small: true })}`);
+  }
 }
 
 export class OuroborosItemSheet extends HandlebarsApplicationMixin(ItemSheetV2) {

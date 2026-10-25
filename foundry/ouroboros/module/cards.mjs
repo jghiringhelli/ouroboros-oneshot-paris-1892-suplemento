@@ -112,9 +112,20 @@ export async function ensureDecksAndHands({ npcs = [] } = {}) {
     if (!getDeck(type)) await createDeck(type);
     if (!getDiscard(type)) await createDiscard(type);
   }
-  for (const a of game.actors) if (a.type === "character") await ensureHand(a);
-  for (const a of npcs) await ensureHand(a);
+  const wanted = new Set([...game.actors.filter(a => a.type === "character" || a.getFlag(NS, "hand")), ...npcs]);
+  for (const a of wanted) await ensureHand(a);
   await publishTable();
+}
+
+/** Reparte hasta su tamaño a toda mano vacía (jugadores y PNJ con `flags.ouroboros.hand`). Devuelve cuántas repartió. */
+export async function dealEmptyHands() {
+  if (!game.user.isGM || !getDeck("players") || !getDeck("gm")) return 0;
+  let n = 0;
+  for (const a of game.actors) {
+    const hand = getHand(a);
+    if (hand && !hand.cards.size && (a.type !== "character" || a.getFlag(NS, "id"))) { await fillHand(a); n++; }
+  }
+  return n;
 }
 
 /* ---------- Estado público de la mesa ----------

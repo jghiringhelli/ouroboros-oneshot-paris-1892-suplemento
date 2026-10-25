@@ -110,8 +110,10 @@ Hooks.once("init", () => {
 
   // Enriquecedores: @Chequeo[id]{texto}, @Obra[id]{texto}, @Spawn[id]{texto}
   const icons = { Chequeo: "fa-paper-plane", Obra: "fa-eye", Spawn: "fa-users" };
-  for (const [name, icon] of Object.entries(icons)) {
-    CONFIG.TextEditor.enrichers.push({
+  const enrichers = CONFIG.TextEditor?.enrichers;
+  if (!enrichers) console.warn("Ouroboros | no se encontró CONFIG.TextEditor.enrichers (API v14): @Chequeo/@Obra/@Spawn no se enriquecerán");
+  for (const [name, icon] of enrichers ? Object.entries(icons) : []) {
+    enrichers.push({
       pattern: new RegExp(`@${name}\\[([^\\]]+)\\](?:\\{([^}]+)\\})?`, "gi"),
       enricher: async match => {
         const a = document.createElement("a");
@@ -181,15 +183,34 @@ Hooks.on("updateActor", (actor, changes) => {
 
 const refreshHand = foundry.utils.debounce(() => {
   if (handApp?.rendered) handApp.render();
+  if (game.user.isGM && tableApp?.rendered) tableApp.render();
   for (const app of foundry.applications.instances.values()) {
     if (app instanceof OuroborosActorSheet && app.rendered) app.render();
   }
 }, 150);
 for (const h of ["createCard", "updateCard", "deleteCard", "updateCards", "createCards", "deleteCards"]) Hooks.on(h, refreshHand);
 
+// Entrada fija para el GM (no depende de los controles de escena): cabecera del directorio de Actores
+Hooks.on("renderActorDirectory", (app, html) => {
+  if (!game.user.isGM) return;
+  const root = html instanceof HTMLElement ? html : html?.[0];
+  if (!root || root.querySelector(".ouro-dir-buttons")) return;
+  const box = document.createElement("div");
+  box.className = "ouro-dir-buttons";
+  box.innerHTML = `<button type="button" data-ouro-open="table"><i class="fa-solid fa-table-cells"></i> ${L("OUROBOROS.Panel.gmTable")}</button>
+    <button type="button" data-ouro-open="panel"><i class="fa-solid fa-dragon"></i> ${L("OUROBOROS.GMPanel")}</button>`;
+  box.addEventListener("click", ev => {
+    const act = ev.target.closest("[data-ouro-open]")?.dataset.ouroOpen;
+    if (act === "table") openTable();
+    else if (act === "panel") openGMPanel();
+  });
+  (root.querySelector(".directory-header") ?? root).append(box);
+});
+
 Hooks.on("getSceneControlButtons", controls => {
   try {
-    const tools = controls.tokens?.tools;
+    const group = controls.tokens ?? controls.token ?? Object.values(controls).find(c => c?.tools);
+    const tools = group?.tools;
     if (!tools) return;
     tools.ouroTable = { name: "ouroTable", title: "OUROBOROS.Table.title", icon: "fa-solid fa-table-cells", order: 89, button: true, onChange: () => openTable() };
     tools.ouroHand = { name: "ouroHand", title: "OUROBOROS.Hand.open", icon: "fa-solid fa-diamond", order: 90, button: true, onChange: () => openHand() };

@@ -12,7 +12,9 @@ export const ARTWORKS = [
   { id: "07_kraken", name: "El kraken del lago", scene: "Acto 3" },
   { id: "08_musas", name: "Las Musas", scene: "Escena 4" },
   { id: "09_cartel_rosacruz", name: "Cartel del Salón Rosa+Cruz", scene: "Escena 1" },
-  { id: "10_estatua_bathsheba", name: "Estatua de Bathsheba", scene: "Acto 3" }
+  { id: "10_estatua_bathsheba", name: "Estatua de Bathsheba", scene: "Acto 3" },
+  // pure = estatua inicial, vídeo estatua→mujer y macabre = mujer (fotograma final, donde queda congelado)
+  { id: "11_transformacion_bathsheba", name: "La transformación de Bathsheba", scene: "Acto 3", endOn: "macabre" }
 ];
 
 /** Retratos y carteles sueltos (assets/extra): se muestran sin chequeo. */
@@ -99,7 +101,12 @@ export function playVideoLocal(id) {
   const vid = overlay.querySelector("video.vid");
   if (!vid || vid.dataset.played) return;
   vid.dataset.played = "1";
-  const done = () => { vid.hidden = true; vid.removeAttribute("src"); vid.load(); };
+  const mac = overlay.querySelector(".macabre");
+  const endOnMacabre = ARTWORKS.find(a => a.id === id)?.endOn === "macabre" && mac;
+  const done = () => {
+    if (endOnMacabre) { mac.getAnimations().forEach(a => a.cancel()); mac.style.opacity = "1"; }
+    vid.hidden = true; vid.removeAttribute("src"); vid.load();
+  };
   vid.muted = true;
   vid.loop = false;
   vid.addEventListener("ended", done, { once: true });

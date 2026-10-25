@@ -10,11 +10,17 @@
 
     <h3 class="ouro-section">{{localize 'OUROBOROS.Panel.table'}}</h3>
     <div class="ouro-row-buttons">
-      <button type="button" data-action="openTable"><i class="fa-solid fa-table-cells"></i> {{localize 'OUROBOROS.Table.title'}}</button>
+      <button type="button" data-action="openTable"><i class="fa-solid fa-table-cells"></i> {{localize 'OUROBOROS.Panel.gmTable'}}</button>
       <button type="button" data-action="openHand"><i class="fa-solid fa-diamond"></i> {{localize 'OUROBOROS.Hand.open'}}</button>
       <button type="button" data-action="openGallery"><i class="fa-solid fa-panorama"></i> {{localize 'OUROBOROS.Gallery.title'}}</button>
       <button type="button" data-action="askCheck"><i class="fa-solid fa-paper-plane"></i> {{localize 'OUROBOROS.Request.title'}}</button>
     </div>
+
+    <h3 class="ouro-section">{{localize 'OUROBOROS.Panel.hands'}}</h3>
+    {{#each hands}}
+    <div class="ouro-item"><span class="name">{{name}}<small>{{count}} / {{size}} · {{localize 'OUROBOROS.Deck.title'}}: {{#if (eq deckType "players")}}{{localize 'OUROBOROS.Deck.players'}}{{else}}{{localize 'OUROBOROS.Deck.gm'}}{{/if}}</small></span>
+      <a data-action="openActorHand" data-actor="{{id}}" title="{{localize 'OUROBOROS.Hand.open'}}"><i class="fa-solid fa-diamond"></i></a></div>
+    {{else}}<p class="ouro-empty">{{localize 'OUROBOROS.Table.noHands'}}</p>{{/each}}
 
     <h3 class="ouro-section">{{localize 'OUROBOROS.Map.title'}}</h3>
     <div class="ouro-row-buttons">
